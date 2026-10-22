@@ -98,10 +98,6 @@ footer{font-size:13px;color:var(--muted);text-align:center}
     <span class="count" id="count">0 of 2</span><span class="hint">items approved</span>
     <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
   </div>
-  <div class="who">
-    <label for="client-name">Your name</label>
-    <input id="client-name" type="text" autocomplete="name" placeholder="So we know who approved">
-  </div>
   <div class="notice" id="notice" hidden></div>
 
   <div id="items"></div>
@@ -180,8 +176,8 @@ function render(){
       const r = document.createElement("div");
       r.className = "result " + rec.status;
       r.innerHTML = rec.status === "approved"
-        ? `<b>Approved${optLabel ? ` — Option ${rec.option}, ${esc(optLabel.label)}` : ""}</b> · ${esc(rec.name ? rec.name + ", " : "")}${esc(fmtDate(rec.at))}`
-        : `<b>Changes requested</b> · ${esc(rec.name ? rec.name + ", " : "")}${esc(fmtDate(rec.at))}<p>${esc(rec.note || "")}</p>`;
+        ? `<b>Approved${optLabel ? ` — Option ${rec.option}, ${esc(optLabel.label)}` : ""}</b> · ${esc(fmtDate(rec.at))}`
+        : `<b>Changes requested</b> · ${esc(fmtDate(rec.at))}<p>${esc(rec.note || "")}</p>`;
       card.appendChild(r);
       if (canWrite){
         const a = document.createElement("div"); a.className = "actions";
@@ -224,7 +220,6 @@ function render(){
   document.getElementById("barfill").style.width = (approved/ITEMS.length*100) + "%";
 }
 
-function clientName(){ return document.getElementById("client-name").value.trim(); }
 
 async function loadAnswers(){
   const r = await fetch(API + "?order=" + encodeURIComponent(ORDER.id), {cache:"no-store"});
@@ -238,8 +233,7 @@ function applyAnswers(ans){
 }
 
 async function save(it, rec){
-  const name = clientName();
-  if (!name){ showNotice("Please enter your name at the top before submitting."); document.getElementById("client-name").focus(); return; }
+  const name = "";
   hideNotice();
   canWrite = false; render();
   const body = JSON.stringify({orderId: ORDER.id, orderName: ORDER.name, itemId: it.id, itemName: it.name,
@@ -259,9 +253,6 @@ function showNotice(msg){ const n=document.getElementById("notice"); n.textConte
 function hideNotice(){ document.getElementById("notice").hidden = true; }
 
 document.querySelector("h1").textContent = ORDER.name;
-const nameInput = document.getElementById("client-name");
-try { nameInput.value = localStorage.getItem("bundledClientName") || ""; } catch(e){}
-nameInput.addEventListener("change", () => { try { localStorage.setItem("bundledClientName", nameInput.value.trim()); } catch(e){} });
 
 render();
 loadAnswers()
