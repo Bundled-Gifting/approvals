@@ -276,7 +276,12 @@ async function save(it, rec){
 function showNotice(msg){ const n=document.getElementById("notice"); n.textContent = msg; n.hidden = false; }
 function hideNotice(){ document.getElementById("notice").hidden = true; }
 
-document.querySelector("h1").textContent = ORDER.name;
+(function(){
+  const h = document.querySelector("h1"), m = ORDER.name.match(/^(.*?)\s*(#\S+)$/);
+  if (m){ h.textContent = m[1] + " "; const sm = document.createElement("span"); sm.textContent = "Internal PO " + m[2];
+    sm.style.cssText = "font-size:.45em;font-weight:500;color:var(--muted);letter-spacing:.02em;white-space:nowrap"; h.appendChild(sm); }
+  else h.textContent = ORDER.name;
+})();
 
 render();
 loadAnswers()
