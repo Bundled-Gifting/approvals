@@ -249,6 +249,11 @@ function render(){
   document.getElementById("count-"+g.id).textContent = !loaded ? "…" : `${approved} of ${gItems.length}`;
   document.getElementById("barfill-"+g.id).style.width = (approved/gItems.length*100) + "%";
   });
+  document.querySelectorAll(".summary").forEach(sm => {
+    sm.querySelectorAll(".hint,.bar").forEach(x => x.style.display = loaded ? "" : "none");
+    if (!loaded){ const c = sm.querySelector(".count"); c.textContent = "Loading…"; c.style.fontSize = "17px"; }
+    else sm.querySelector(".count").style.fontSize = "";
+  });
 }
 
 
