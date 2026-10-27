@@ -5,6 +5,8 @@
 <meta charset="utf-8">
 <title>Bundled Proof Approval</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Layout: proof sheet — summary strip, then one card per item, options as a pick-one row */
@@ -153,12 +155,12 @@ function render(){
     card.className = "card";
     card.setAttribute("aria-labelledby", "h-"+it.id);
     const specs = it.specs.map(([k,v]) => k ? `<li>${esc(k)}: <b>${esc(v)}</b></li>` : `<li><b>${esc(v)}</b></li>`).join("");
-    const chipText = loaded ? {pending:"Waiting on you", approved:"Approved", changes:"Changes requested"}[status] : "Loading…";
+    const chipText = loaded ? {pending:"Waiting on you", approved:"Approved", changes:"Changes requested"}[status] : "";
     card.innerHTML = `
       <div class="card-head">
         <div><div class="itemno">Item ${i+1} of ${ITEMS.length}</div>
         <h2 id="h-${it.id}" style="white-space:pre-line">${esc(it.name)}</h2><ul class="specs">${specs}</ul>${it.attention ? `<p class="attn"><b>Attention:</b> ${esc(it.attention)}</p>` : ""}</div>
-        <span class="chip ${loaded ? status : "pending"}">${chipText}</span>
+        <span class="chip ${status}"${loaded ? "" : ' style="visibility:hidden"'}>${chipText}</span>
       </div>`;
 
     if (it.options && it.img){
@@ -249,17 +251,14 @@ function render(){
   });
   document.getElementById("count").textContent = !loaded ? "…" : `${approved} of ${ITEMS.length}`;
   document.getElementById("barfill").style.width = (approved/ITEMS.length*100) + "%";
-  document.querySelectorAll(".summary").forEach(sm => {
-    sm.querySelectorAll(".hint,.bar").forEach(x => x.style.display = loaded ? "" : "none");
-    if (!loaded){ const c = sm.querySelector(".count"); c.textContent = "Loading…"; c.style.fontSize = "17px"; }
-    else sm.querySelector(".count").style.fontSize = "";
-  });
+  document.querySelectorAll(".summary").forEach(sm => { sm.style.visibility = loaded ? "" : "hidden"; });
 }
 
 
 async function loadAnswers(){
   const r = await fetch(API + "?order=" + encodeURIComponent(ORDER.id), {cache:"no-store"});
   const j = await r.json();
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({answers: (j && j.answers) || {}, history: (j && j.history) || {}})); } catch(e){}
   Object.keys(history).forEach(k => delete history[k]);
   if (j && j.history) Object.assign(history, j.history);
   return (j && j.answers) || {};
@@ -293,6 +292,11 @@ function hideNotice(){ document.getElementById("notice").hidden = true; }
 
 document.querySelector("h1").textContent = ORDER.name;
 
+const CACHE_KEY = "bundled-approvals:" + ORDER.id;
+try {
+  const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+  if (c && c.answers){ Object.assign(history, c.history || {}); applyAnswers(c.answers); loaded = true; }
+} catch(e){}
 render();
 loadAnswers()
   .then(ans => { applyAnswers(ans); loaded = true; canWrite = true; render(); })
