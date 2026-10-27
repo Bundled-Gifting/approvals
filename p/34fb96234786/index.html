@@ -124,6 +124,7 @@ const state = {};      // id -> saved record from the store
 const history = {};    // id -> every answer for the item, oldest first
 const local = {};      // id -> {pick, editing, noteOpen, note}
 let canWrite = false;
+let loaded = false;   // true once saved answers have come back from Google
 
 function esc(s){ const d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
 function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}); }catch(e){ return ""; } }
@@ -143,12 +144,12 @@ function render(){
     card.className = "card";
     card.setAttribute("aria-labelledby", "h-"+it.id);
     const specs = it.specs.map(([k,v]) => k ? `<li>${esc(k)}: <b>${esc(v)}</b></li>` : `<li><b>${esc(v)}</b></li>`).join("");
-    const chipText = {pending:"Waiting on you", approved:"Approved", changes:"Changes requested"}[status];
+    const chipText = loaded ? {pending:"Waiting on you", approved:"Approved", changes:"Changes requested"}[status] : "Loading…";
     card.innerHTML = `
       <div class="card-head">
         <div><div class="itemno">Item ${i+1} of ${ITEMS.length}</div>
         <h2 id="h-${it.id}" style="white-space:pre-line">${esc(it.name)}</h2><ul class="specs">${specs}</ul>${it.attention ? `<p class="attn"><b>Attention:</b> ${esc(it.attention)}</p>` : ""}</div>
-        <span class="chip ${status}">${chipText}</span>
+        <span class="chip ${loaded ? status : "pending"}">${chipText}</span>
       </div>`;
 
     if (it.options && it.img){
@@ -220,6 +221,7 @@ function render(){
       a.append(ap, ch);
       if (needPick && canWrite){ const h=document.createElement("span"); h.className="hint"; h.textContent="Pick an option to approve"; a.appendChild(h); }
       if (l.editing){ const c=document.createElement("button"); c.className="btn link"; c.type="button"; c.textContent="Cancel"; c.onclick=()=>{l.editing=false; l.pick = rec && rec.option || null; render();}; a.appendChild(c); }
+      if (!loaded) a.style.visibility = "hidden";
       card.appendChild(a);
 
       if (l.noteOpen){
@@ -237,7 +239,7 @@ function render(){
     }
     host.appendChild(card);
   });
-  document.getElementById("count").textContent = `${approved} of ${ITEMS.length}`;
+  document.getElementById("count").textContent = !loaded ? "…" : `${approved} of ${ITEMS.length}`;
   document.getElementById("barfill").style.width = (approved/ITEMS.length*100) + "%";
 }
 
@@ -285,8 +287,8 @@ function hideNotice(){ document.getElementById("notice").hidden = true; }
 
 render();
 loadAnswers()
-  .then(ans => { applyAnswers(ans); canWrite = true; render(); })
-  .catch(() => { canWrite = true; render(); showNotice("We couldn't load earlier answers. You can still submit yours."); });
+  .then(ans => { applyAnswers(ans); loaded = true; canWrite = true; render(); })
+  .catch(() => { loaded = true; canWrite = true; render(); showNotice("We couldn't load earlier answers. You can still submit yours."); });
 </script>
 </body>
 </html>
