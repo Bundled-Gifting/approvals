@@ -104,6 +104,26 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 .fl span[role=radio]{font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 14px;cursor:pointer}
 .fl span[aria-checked="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .fl span:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.checklist{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.checklist h2{font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.checklist ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px}
+.checklist button{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:14px;background:var(--bg)}
+.checklist button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.checklist i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;font-weight:700;font-size:13px;flex:none}
+.checklist .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.checklist .st{font-size:12px;font-weight:600;white-space:nowrap}
+.checklist .ok i{background:var(--ok);color:#fff}.checklist .ok .st{color:var(--ok)}
+.checklist .chg i{background:#c81e1e;color:#fff}.checklist .chg .st{color:#c81e1e}
+.checklist .pend i{background:var(--pend-bg);color:var(--pend)}.checklist .pend .st{color:var(--pend)}
+.card.mini{padding:0;gap:0;border-color:var(--ok);background:var(--ok-bg)}
+.minibtn{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:12px}
+.minibtn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.minibtn img{width:56px;height:56px;object-fit:contain;background:#fff;border-radius:6px;flex:none}
+.minitxt{display:flex;flex-direction:column;min-width:0;flex:1}
+.minitxt b{font-weight:600;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.minichip{font-size:13px;font-weight:700;color:var(--ok);white-space:nowrap}
+.minimore{font-size:13px;color:var(--accent);font-weight:600}
+@media (max-width:520px){.minimore{display:none}}
 </style>
 </head>
 <body>
@@ -123,6 +143,7 @@ footer{font-size:13px;color:var(--muted);text-align:center}
     <span class="count" id="count">0 of 2</span><span class="hint">items approved</span>
     <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
   </div>
+  <nav class="checklist" id="checklist" aria-label="Items at a glance" hidden></nav>
   <div class="notice" id="notice" hidden></div>
 
   <div id="items"></div>
@@ -159,15 +180,30 @@ function render(){
   const host = document.getElementById("items");
   host.innerHTML = "";
   let approved = 0;
+  const checks = [];
   ITEMS.forEach((it, i) => {
     const rec = it.fixed || state[it.id];
     const l = local[it.id] || (local[it.id] = {pick: rec && rec.option || null, editing:false, noteOpen:false, note:""});
     const status = rec ? rec.status : "pending";
     if (status === "approved") approved++;
     const showForm = !rec || l.editing;
+    const firstLine = it.name.split("\n")[0];
+    const chosen = rec && rec.option && it.options ? it.options.find(o => o.key === rec.option) : null;
+    const thumb = (chosen && chosen.img) || it.img || (it.options && it.options[0].img);
+    checks.push({id: it.id, n: i+1, name: firstLine, status});
+    if (loaded && status === "approved" && !l.editing && !l.open){
+      const mini = document.createElement("section");
+      mini.className = "card mini"; mini.id = "card-" + it.id;
+      const btn = document.createElement("button"); btn.type = "button"; btn.className = "minibtn";
+      btn.setAttribute("aria-label", `${firstLine}, approved. Show details`);
+      btn.innerHTML = `<img src="${thumb}" alt=""><span class="minitxt"><span class="itemno">Item ${i+1} of ${ITEMS.length}</span><b>${esc(firstLine)}</b>${chosen ? `<span class="hint">Option ${esc(rec.option)}, ${esc(chosen.label)}</span>` : ""}</span><span class="minichip">Approved &#10003;</span><span class="minimore">View</span>`;
+      btn.onclick = () => { l.open = true; render(); const c = document.getElementById("card-" + it.id); if (c) c.scrollIntoView({block:"nearest"}); };
+      mini.appendChild(btn); host.appendChild(mini);
+      return;
+    }
 
     const card = document.createElement("section");
-    card.className = "card";
+    card.className = "card"; card.id = "card-" + it.id;
     card.setAttribute("aria-labelledby", "h-"+it.id);
     const specs = it.specs.map(([k,v]) => k ? `<li>${esc(k)}: <b>${esc(v)}</b></li>` : `<li><b>${esc(v)}</b></li>`).join("");
     const chipText = loaded ? {pending:"Waiting on you", approved:"Approved", changes:"Changes requested"}[status] : "";
@@ -228,12 +264,15 @@ function render(){
         }).join("")}</ol>`;
         card.appendChild(h);
       }
+      if (it.fixed && l.open){ const a2 = document.createElement("div"); a2.className = "actions"; const cl = document.createElement("button"); cl.className = "btn link"; cl.type = "button"; cl.textContent = "Collapse"; cl.onclick = () => { l.open = false; render(); }; a2.appendChild(cl); card.appendChild(a2); }
       if (canWrite && !it.fixed){
         const a = document.createElement("div"); a.className = "actions";
         const e = document.createElement("button"); e.className="btn link"; e.type="button"; e.id=`edit-${it.id}`;
         e.textContent = "Change my answer";
         e.onclick = () => { l.editing = true; l.noteOpen = false; render(); };
-        a.appendChild(e); card.appendChild(a);
+        a.appendChild(e);
+        if (status === "approved" && l.open){ const cl = document.createElement("button"); cl.className = "btn link"; cl.type = "button"; cl.textContent = "Collapse"; cl.onclick = () => { l.open = false; render(); }; a.appendChild(cl); }
+        card.appendChild(a);
       }
     } else {
       const a = document.createElement("div"); a.className = "actions";
@@ -273,6 +312,11 @@ function render(){
     }
     host.appendChild(card);
   });
+  const cl = document.getElementById("checklist");
+  const MARK = {approved:["ok","&#10003;","Approved"], changes:["chg","!","Change in progress"], pending:["pend","&#9675;","Waiting on you"]};
+  cl.innerHTML = `<h2>Your items</h2><ol>${checks.map(c => { const m = MARK[c.status] || MARK.pending; return `<li><button type="button" data-go="${c.id}" class="${m[0]}"><i aria-hidden="true">${m[1]}</i><span class="nm">${esc(c.name)}</span><span class="st">${m[2]}</span></button></li>`; }).join("")}</ol>`;
+  cl.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { const c = document.getElementById("card-" + b.dataset.go); if (c) c.scrollIntoView({behavior:"smooth", block:"start"}); });
+  cl.hidden = !loaded;
   document.getElementById("count").textContent = !loaded ? "…" : `${approved} of ${ITEMS.length}`;
   document.getElementById("barfill").style.width = (approved/ITEMS.length*100) + "%";
   document.querySelectorAll(".summary").forEach(sm => { sm.style.visibility = loaded ? "" : "hidden"; });
