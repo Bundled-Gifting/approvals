@@ -115,7 +115,7 @@ footer{font-size:13px;color:var(--muted);text-align:center}
       <img class="logo" src="../../assets/logo.png" alt="Bundled Corporate Gifting Solutions, www.bundledgifting.com">
       <address class="contact"><span>Orders@BundledGifting.com</span><span>1 (313) 600-2765</span></address>
     </div>
-    <div class="eyebrow">Proof approval and replacement approval</div>
+    <div class="eyebrow">Mug update, proof approval and replacement approval</div>
     <h1>Rocket Fall Gifts #3479</h1>
     <p class="lede">Please review each item below. Pick your option where there's a choice, then approve it or request changes. Your answers save automatically.</p>
   </header>
@@ -135,6 +135,7 @@ const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPz
 const ORDER = { id: "rocket-3479-combined", name: "Rocket Fall Gifts #3479" };
 const SWAP_INTRO = "The item selected for your order is not available in the requested quantity, and we sincerely apologize for the inconvenience. Would you be willing to switch to one of the options below? Please choose the one you prefer, or let us know if none of these will work. Thank you so much for your understanding.";
 const ITEMS = [
+  {"id": "mug-update", "group": "update", "orderId": "rocket-3479-34fb96234786", "name": "Mug Update", "specs": [], "optFit": true, "optRows": true, "attention": "Our production team let us know that the Maize mug you approved can't be printed in an exact match of your Pantone 032 red. The standard red for this mug is Pantone 186, which is a slightly deeper red. You can see the two colors side by side below. Please choose one mug. There are 3 options.", "img": "img/ede9f11b8e.jpg", "options": [{"key": "A", "label": "Maize mug with Pantone 186 red", "img": "img/c15c6fd8bc.jpg"}, {"key": "B", "label": "Laser engraved mug", "img": "img/116bcdfebd.jpg"}, {"key": "C", "label": "Brown mug with Pantone 032 red", "img": "img/d193b86f93.jpg"}]},
   { id:"mug", group:"main", orderId:"rocket-3479-34fb96234786", name:"Branded Mug", specs:[], optFit:true, optRows:true, options:[{key:"A", label:"Orange", img:"img/46e8deaa6c.jpg"},{key:"B", label:"Maize", img:"img/304af55db4.jpg"}] },
   {"id": "cookie-swap", "name": "Choose a replacement", "specs": [], "optFit": true, "options": [{"key": "A", "label": "Falling Leaves Duo Sampler - Assorted Cookies", "desc": "Good news! Your original choice is available. We just don't have enough in one box design to fill your full order, so your order would include a mix of the box designs shown here.", "img": "img/732452c09d.jpg", "mix": [["Hello, Sunshine! Duo Sampler - Iced Cookies", 81], ["Fall Plaid Duo Sampler - Iced Cookies", 50], ["Fall Sunflower Duo Sampler - Assorted Cookies", 250], ["Fall Plaid Duo Sampler - Assorted Cookies", 75], ["Falling Leaves Duo Sampler - Assorted Cookies", 50]]}, {"key": "B", "label": "Gourmet Marzipan Thanksgiving Pumpkin + Leaves Candy Duets", "desc": "Handmade almond marzipan pair: one embossed pumpkin and one hand-dusted maple leaf, each about 1.5\" wide. Each piece is individually wrapped and set in a clear favor box tied with a gold ribbon. Gluten-free and kosher. Contains tree nuts (almonds).", "size": "0.88 oz", "img": "img/fbaecae0cc.jpg"}, {"key": "C", "label": "Fall Soft Batch Cookie: Pumpkin Butterscotch & Caramel Apple", "desc": "Soft, moist bakery-style cookies in a festive gift box. These are two different cookies, and each box is one flavor. Please choose Pumpkin Butterscotch, Caramel Apple, or a mix of both.", "size": "6 oz", "flavors": ["Pumpkin Butterscotch", "Caramel Apple", "Mix of both"], "img": "img/59ad5324a0.jpg"}], "group": "swap", "orderId": "rocket-3479-cookies-97ee84a5f149", "swap": true}
 ];
@@ -151,20 +152,26 @@ function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString(undefined,{m
 function render(){
   const host = document.getElementById("items");
   host.innerHTML = "";
-  const GROUPS = [{id:"main", title:"Proof Approval"}, {id:"swap", title:"Replacement Approval"}];
-  const top = document.createElement("div"); top.className = "summary"; top.setAttribute("aria-live","polite");
-  top.innerHTML = `<span class="count" id="count"></span><span class="hint">items approved</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div>`;
-  host.appendChild(top);
-  let approved = 0, n = 0;
+  const GROUPS = [{id:"update", title:"Mug Update"}, {id:"main", title:"Proof Approval"}, {id:"swap", title:"Replacement Approval"}];
+  const inUpd = x => x.group === "update";
+  const ok = x => state[x.id] && state[x.id].status === "approved";
+  const mkSum = list => { const sm = document.createElement("div"); sm.className = "summary"; sm.setAttribute("aria-live","polite");
+    const a = list.filter(ok).length;
+    sm.innerHTML = `<span class="count">${loaded ? a + " of " + list.length : ""}</span><span class="hint">${list.length === 1 ? "item approved" : "items approved"}</span><div class="bar" aria-hidden="true"><i style="width:${a/list.length*100}%"></i></div>`;
+    return sm; };
+  let approved = 0, nU = 0, nR = 0;
   GROUPS.forEach(g => {
   const gItems = ITEMS.filter(x => (x.group || "main") === g.id);
   if (!gItems.length) return;
   const gh = document.createElement("div"); gh.className = "group-head";
   gh.innerHTML = `<h2 class="group-title">${esc(g.title)}</h2>${g.id === "swap" ? `<p class="attn">${esc(SWAP_INTRO)}</p>` : ""}`;
   if (g.id === "swap") gh.appendChild(document.getElementById("current-tpl").content.cloneNode(true));
+  if (g.id === "main") host.appendChild(mkSum(ITEMS.filter(x => !inUpd(x))));
   host.appendChild(gh);
+  if (g.id === "update") gh.appendChild(mkSum(gItems));
   gItems.forEach((it) => {
-    const i = n++;
+    const setLen = ITEMS.filter(x => inUpd(x) === inUpd(it)).length;
+    const i = inUpd(it) ? nU++ : nR++;
     const rec = state[it.id];
     const l = local[it.id] || (local[it.id] = {pick: rec && rec.option || null, editing:false, noteOpen:false, note:""});
     const status = rec ? rec.status : "pending";
@@ -178,7 +185,7 @@ function render(){
     const chipText = loaded ? (it.swap ? {pending:"Waiting on you", approved:"Option chosen", changes:"None of these work"} : {pending:"Waiting on you", approved:"Approved", changes:"Changes requested"})[status] : "";
     card.innerHTML = `
       <div class="card-head">
-        <div><div class="itemno">Item ${i+1} of ${ITEMS.length}</div>
+        <div><div class="itemno">Item ${i+1} of ${setLen}</div>
         <h2 id="h-${it.id}" style="white-space:pre-line">${esc(it.name)}</h2><ul class="specs">${specs}</ul>${it.attention ? `<p class="attn"><b>Attention:</b> ${esc(it.attention)}</p>` : ""}</div>
         <span class="chip ${status}"${loaded ? "" : ' style="visibility:hidden"'}>${chipText}</span>
       </div>`;
@@ -275,8 +282,6 @@ function render(){
     host.appendChild(card);
   });
   });
-  document.getElementById("count").textContent = loaded ? `${approved} of ${ITEMS.length}` : "Loading…";
-  document.getElementById("barfill").style.width = (approved/ITEMS.length*100) + "%";
   document.querySelectorAll(".summary").forEach(sm => { sm.style.visibility = loaded ? "" : "hidden"; });
 }
 
