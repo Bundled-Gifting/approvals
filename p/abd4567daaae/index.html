@@ -93,6 +93,14 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 .wip{position:absolute;inset:0;background:rgba(200,30,30,.22);border:3px solid #c81e1e;border-radius:8px;display:grid;place-items:center;pointer-events:none}
 .wip span{background:#c81e1e;color:#fff;font:700 18px var(--body);text-align:center;padding:12px 18px;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:80%}
 .wip small{display:block;font-weight:500;font-size:14px;margin-top:2px}
+.opt .optname{font-weight:600;font-size:14px;align-items:flex-start}
+.opt .otag{align-self:flex-start;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--pend-bg);border-radius:99px;padding:3px 10px}
+.opt .feats{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.45}
+.opt .samp{font-size:12px;color:var(--muted);font-style:italic}
+.fl{display:flex;flex-wrap:wrap;gap:6px}
+.fl span[role=radio]{font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 14px;cursor:pointer}
+.fl span[aria-checked="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.fl span:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -128,7 +136,7 @@ const ITEMS = [
   { id:"mugs", name:"YETI Mugs\nRambler 10 oz CL Mug MS Cstm Black", specs:[], img:"img/8c6112ade4.jpg" },
   { id:"crewneck", name:"Branded Crewneck sweatshirt", specs:[], img:"img/7390de71c6.jpg" },
   { id:"fleece", name:"Branded Zip Up Fleece Jacket- Mens", specs:[], img:"img/0a8b6245e2.jpg" },
-  { id:"notebook", name:"Branded Notebook", specs:[], img:"img/ff068ded64.jpg" },
+  {"id": "notebook-v2", "name": "Branded Notebook", "specs": [], "optFit": true, "optMin": 300, "attention": "Please choose one option. Option A is a planner with your logo debossed. Options B, C and D are Moleskine notebooks, not planners. The photos for B, C and D are samples to show the finish, and your logo will be used.", "options": [{"key": "A", "label": "Debossed logo print only", "tag": "Planner", "img": "img/ff068ded64.jpg"}, {"key": "B", "label": "Foil stamp in silver or gold", "tag": "Moleskine notebook", "sample": "Sample photo shown. Your logo will be used.", "colors": ["Silver", "Gold"], "feats": ["Coated paper wrapped hard cover", "Perfect bound", "120 sheets (240 pages)", "Ivory, lined paper", "Expandable inner pocket", "Elastic closure", "Ribbon page marker", "Size: 8 1/4 inches H x 5 inches W x 5/8 inches D"], "img": "img/8c1e61de0d.jpg"}, {"key": "C", "label": "White logo", "tag": "Moleskine notebook", "sample": "Sample photo shown. Your logo will be used.", "feats": ["Flexible coated paper cover", "Perfect bound", "48 sheets (96 pages)", "White, lined perforated paper", "Size: 8 1/4 inches H x 5 inches W x 1/4 inches D"], "img": "img/b32598a51a.jpg"}, {"key": "D", "label": "Full color logo", "tag": "Moleskine notebook", "sample": "Sample photo shown. Your logo will be used.", "feats": ["Coated paper wrapped hard cover", "Perfect bound", "120 sheets (240 pages)", "Ivory, lined paper", "Expandable inner pocket", "Elastic closure", "Ribbon page marker", "Size: 8 1/4 inches H x 5 inches W x 5/8 inches D"], "img": "img/5b65af4f59.jpg"}]},
   { id:"plush", name:"Branded Plush Key Chain Bag Charm", specs:[], wide:true, img:"img/f3dc36539d.jpg" },
   { id:"sleeve", name:"Branded Laptop Sleeve", specs:[], wide:true, img:"img/53b2574b1d.jpg" },
   { id:"award", name:"Branded Award * Engraved*", specs:[], img:"img/3068a62784.jpg" },
@@ -176,6 +184,7 @@ function render(){
     if (it.options){
       const grid = document.createElement("div");
       grid.className = "options";
+      if (it.optMin) grid.style.gridTemplateColumns = `repeat(auto-fit,minmax(${it.optMin}px,1fr))`;
       grid.setAttribute("role","group");
       grid.setAttribute("aria-label","Choose an option");
       it.options.forEach(o => {
@@ -183,8 +192,9 @@ function render(){
         b.className = "opt"; b.type = "button"; b.id = `opt-${it.id}-${o.key}`;
         b.setAttribute("aria-pressed", String(l.pick === o.key));
         b.disabled = !showForm || !canWrite;
-        b.innerHTML = `<img src="${o.img}" alt="Option ${o.key}: ${esc(o.label)}"${it.optFit ? ' style="aspect-ratio:auto;object-fit:contain;background:#fff"' : ""}><span><i class="letter">${o.key}</i>${esc(o.label)}</span>`;
-        b.onclick = () => { l.pick = o.key; render(); };
+        b.innerHTML = `<img src="${o.img}" alt="Option ${o.key}: ${esc(o.label)}"${it.optFit ? ' style="aspect-ratio:auto;object-fit:contain;background:#fff"' : ""}><span class="optname"><i class="letter">${o.key}</i>${esc(o.label)}</span>${o.tag ? `<span class="otag">${esc(o.tag)}</span>` : ""}${o.colors ? `<span class="fl" role="radiogroup" aria-label="Choose a foil color">${o.colors.map(c => `<span role="radio" tabindex="0" data-c="${esc(c)}" aria-checked="${l.pick === o.key && l.color === c}">${esc(c)}</span>`).join("")}</span>` : ""}${o.feats ? `<ul class="feats">${o.feats.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}${o.sample ? `<small class="samp">${esc(o.sample)}</small>` : ""}`;
+        if (o.colors) b.querySelectorAll("[data-c]").forEach(cc => { const go = e => { e.stopPropagation(); e.preventDefault(); if (b.disabled) return; l.pick = o.key; l.color = cc.dataset.c; render(); }; cc.onclick = go; cc.onkeydown = e => { if (e.key === "Enter" || e.key === " ") go(e); }; });
+        b.onclick = () => { if (l.pick !== o.key) l.color = null; l.pick = o.key; render(); };
         grid.appendChild(b);
       });
       card.appendChild(grid);
@@ -200,7 +210,7 @@ function render(){
       const r = document.createElement("div");
       r.className = "result " + rec.status;
       r.innerHTML = rec.status === "approved"
-        ? `<b>Approved${optLabel ? ` — Option ${rec.option}, ${esc(optLabel.label)}` : ""}</b> · ${esc(fmtDate(rec.at))}`
+        ? `<b>Approved${optLabel ? ` — Option ${rec.option}, ${esc(optLabel.label)}` : ""}</b> · ${esc(fmtDate(rec.at))}${rec.note ? `<p>${esc(rec.note)}</p>` : ""}`
         : `<b>Changes requested</b> · ${esc(fmtDate(rec.at))}<p>${esc(rec.note || "")}</p>`;
       card.appendChild(r);
       const hist = it.fixed ? [] : (history[it.id] || []);
@@ -224,16 +234,18 @@ function render(){
       }
     } else {
       const a = document.createElement("div"); a.className = "actions";
-      const needPick = it.options && !l.pick;
+      const pickedOpt = it.options && it.options.find(o => o.key === l.pick);
+      const needColor = !!(pickedOpt && pickedOpt.colors && !l.color);
+      const needPick = (it.options && !l.pick) || needColor;
       const ap = document.createElement("button"); ap.className="btn approve"; ap.type="button"; ap.id=`approve-${it.id}`;
       ap.textContent = it.options && l.pick ? `Approve Option ${l.pick}` : "Approve";
       ap.disabled = !canWrite || needPick;
-      ap.onclick = () => save(it, {status:"approved", option: l.pick || null, note:""});
+      ap.onclick = () => save(it, {status:"approved", option: l.pick || null, note: needColor || !(pickedOpt && pickedOpt.colors) ? "" : "Foil color: " + l.color});
       const ch = document.createElement("button"); ch.className="btn change"; ch.type="button"; ch.id=`change-${it.id}`;
       ch.textContent = "Request changes"; ch.disabled = !canWrite;
       ch.onclick = () => { l.noteOpen = !l.noteOpen; render(); };
       a.append(ap, ch);
-      if (needPick && canWrite){ const h=document.createElement("span"); h.className="hint"; h.textContent="Pick an option to approve"; a.appendChild(h); }
+      if (needPick && canWrite){ const h=document.createElement("span"); h.className="hint"; h.textContent = needColor ? "Pick Silver or Gold in Option " + l.pick : "Pick an option to approve"; a.appendChild(h); }
       if (l.editing){ const c=document.createElement("button"); c.className="btn link"; c.type="button"; c.textContent="Cancel"; c.onclick=()=>{l.editing=false; l.pick = rec && rec.option || null; render();}; a.appendChild(c); }
       if (!loaded) a.style.visibility = "hidden";
       card.appendChild(a);
