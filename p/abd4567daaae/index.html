@@ -120,7 +120,7 @@ const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPz
 const ORDER = { id: "ctnx-bundles-abd4567daaae-r2", name: "The Clinical Trials Network Bundles" };
 const ITEMS = [
   { id:"notepad", name:"Branded Notepad", specs:[], img:"img/e8755adfac.jpg" },
-  { id:"cups", name:"YETI Rambler 20 oz", specs:[], attention:"We're sorry! The Rambler 20 oz is currently out of stock in Black. To keep your order on track, please choose either the Stackable 20 oz in Black or the Rambler 20 oz in Navy. Thank you for your flexibility!", options:[{key:"A", label:"Rambler 20 oz STK MS Black", img:"img/6036a75d0b.jpg"},{key:"B", label:"Rambler 20 oz Navy", img:"img/2b35a0f85c.jpg"}] },
+  { id:"cups", name:"YETI Rambler 20 oz", specs:[], attention:"Good news! Your original Rambler 20 oz in Black is back in stock, so your order will include it as originally requested.", img:"img/eccff7ed79.jpg", fixed:{status:"approved", option:null, note:"", at:"2026-10-28T19:37:00Z"} },
   { id:"mugs", name:"YETI Mugs\nRambler 10 oz CL Mug MS Cstm Black", specs:[], img:"img/8c6112ade4.jpg" },
   { id:"crewneck", name:"Branded Crewneck sweatshirt", specs:[], img:"img/7390de71c6.jpg" },
   { id:"fleece", name:"Branded Zip Up Fleece Jacket- Mens", specs:[], img:"img/0a8b6245e2.jpg" },
@@ -145,7 +145,7 @@ function render(){
   host.innerHTML = "";
   let approved = 0;
   ITEMS.forEach((it, i) => {
-    const rec = state[it.id];
+    const rec = it.fixed || state[it.id];
     const l = local[it.id] || (local[it.id] = {pick: rec && rec.option || null, editing:false, noteOpen:false, note:""});
     const status = rec ? rec.status : "pending";
     if (status === "approved") approved++;
@@ -199,7 +199,7 @@ function render(){
         ? `<b>Approved${optLabel ? ` — Option ${rec.option}, ${esc(optLabel.label)}` : ""}</b> · ${esc(fmtDate(rec.at))}`
         : `<b>Changes requested</b> · ${esc(fmtDate(rec.at))}<p>${esc(rec.note || "")}</p>`;
       card.appendChild(r);
-      const hist = history[it.id] || [];
+      const hist = it.fixed ? [] : (history[it.id] || []);
       if (hist.length > 1){
         const h = document.createElement("div"); h.className = "history";
         h.innerHTML = `<h3>Answer history</h3><ol>${hist.map((x, n) => {
@@ -211,7 +211,7 @@ function render(){
         }).join("")}</ol>`;
         card.appendChild(h);
       }
-      if (canWrite){
+      if (canWrite && !it.fixed){
         const a = document.createElement("div"); a.className = "actions";
         const e = document.createElement("button"); e.className="btn link"; e.type="button"; e.id=`edit-${it.id}`;
         e.textContent = "Change my answer";
