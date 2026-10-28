@@ -143,7 +143,6 @@ footer{font-size:13px;color:var(--muted);text-align:center}
     <span class="count" id="count">0 of 2</span><span class="hint">items approved</span>
     <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
   </div>
-  <nav class="checklist" id="checklist" aria-label="Items at a glance" hidden></nav>
   <div class="notice" id="notice" hidden></div>
 
   <div id="items"></div>
@@ -313,10 +312,12 @@ function render(){
     host.appendChild(card);
   });
   const cl = document.getElementById("checklist");
+  if (cl){
   const MARK = {approved:["ok","&#10003;","Approved"], changes:["chg","!","Change in progress"], pending:["pend","&#9675;","Waiting on you"]};
   cl.innerHTML = `<h2>Your items</h2><ol>${checks.map(c => { const m = MARK[c.status] || MARK.pending; return `<li><button type="button" data-go="${c.id}" class="${m[0]}"><i aria-hidden="true">${m[1]}</i><span class="nm">${esc(c.name)}</span><span class="st">${m[2]}</span></button></li>`; }).join("")}</ol>`;
   cl.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { const c = document.getElementById("card-" + b.dataset.go); if (c) c.scrollIntoView({behavior:"smooth", block:"start"}); });
   cl.hidden = !loaded;
+  }
   document.getElementById("count").textContent = !loaded ? "…" : `${approved} of ${ITEMS.length}`;
   document.getElementById("barfill").style.width = (approved/ITEMS.length*100) + "%";
   document.querySelectorAll(".summary").forEach(sm => { sm.style.visibility = loaded ? "" : "hidden"; });
