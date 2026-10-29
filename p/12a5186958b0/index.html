@@ -135,7 +135,7 @@ footer{font-size:13px;color:var(--muted);text-align:center}
       <address class="contact"><span>Orders@BundledGifting.com</span><span>1 (313) 600-2765</span></address>
     </div>
     <div class="eyebrow">Proof approval</div>
-    <h1>313 Pop Up Shop Internal Po #3488</h1>
+    <h1>313 Pop Up Shop</h1>
     <p class="lede">Please review each item below. Pick your option where there's a choice, then approve it or request changes. Your answers save automatically.</p>
   </header>
 
@@ -152,7 +152,7 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 <script>
 /* ===== ORDER SETUP: change these for each new order ===== */
 const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPzfjtOiH0F7s0GzUrSK05MuNX7hos9-oTDu4gYlClJCg/exec";
-const ORDER = { id: "313-popup-3488-12a5186958b0", name: "313 Pop Up Shop Internal Po #3488" };
+const ORDER = { id: "313-popup-3488-12a5186958b0", name: "313 Pop Up Shop #3488" };
 const ITEMS = [
   {"id": "owala", "name": "owala FreeSip Vacuum Bottle - 32 oz", "specs": [], "img": "img/e59db0a6bd.jpg"},
   {"id": "vest-m", "name": "Alberta Puffer Vest - Men's", "specs": [], "img": "img/0da092be67.jpg", "wide": true},
@@ -356,7 +356,12 @@ async function save(it, rec){
 function showNotice(msg){ const n=document.getElementById("notice"); n.textContent = msg; n.hidden = false; }
 function hideNotice(){ document.getElementById("notice").hidden = true; }
 
-document.querySelector("h1").textContent = ORDER.name;
+(function(){
+  const h = document.querySelector("h1"), m = ORDER.name.match(/^(.*?)\s*(#\S+)$/);
+  if (m){ h.textContent = m[1] + " "; const sm = document.createElement("span"); sm.textContent = "Internal PO " + m[2];
+    sm.style.cssText = "font-size:.45em;font-weight:500;color:var(--muted);letter-spacing:.02em;white-space:nowrap"; h.appendChild(sm); }
+  else h.textContent = ORDER.name;
+})();
 
 const CACHE_KEY = "bundled-approvals:" + ORDER.id;
 try {
