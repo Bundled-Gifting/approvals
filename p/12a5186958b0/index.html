@@ -124,6 +124,10 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 .minichip{font-size:13px;font-weight:700;color:var(--ok);white-space:nowrap}
 .minimore{font-size:13px;color:var(--accent);font-weight:600}
 @media (max-width:520px){.minimore{display:none}}
+.client{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.client > div{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 240px}
+.clogo{flex:none;background:#1b2230;border-radius:10px;padding:10px 14px;line-height:0}
+.clogo img{height:52px;width:auto;display:block}
 </style>
 </head>
 <body>
@@ -134,8 +138,11 @@ footer{font-size:13px;color:var(--muted);text-align:center}
       <img class="logo" src="../../assets/logo.png" alt="Bundled Corporate Gifting Solutions, www.bundledgifting.com">
       <address class="contact"><span>Orders@BundledGifting.com</span><span>1 (313) 600-2765</span></address>
     </div>
-    <div class="eyebrow">Proof approval</div>
-    <h1>313 Pop Up Shop</h1>
+    <div class="client">
+      <span class="clogo"><img src="img/client-logo.png" alt="313 Presents logo"></span>
+      <div><div class="eyebrow">Proof approval</div>
+      <h1>313 Pop Up Shop</h1></div>
+    </div>
     <p class="lede">Please review each item below. Pick your option where there's a choice, then approve it or request changes. Your answers save automatically.</p>
   </header>
 
