@@ -7,3 +7,6 @@
 - No "Your items" checklist at the top (Christie decided it was redundant).
 - If you copy a different page, port all of the above over. Older pages are left as they are.
 - The order number always shows as small, muted "Internal PO #1234" text after the order name in the heading, not full size. Set `ORDER.name` to "Order Name #1234" and use the heading script from the Rocket page (`p/34fb96234786`), which splits off the "#1234" and renders it small.
+- Proof images stay at the standard size (~340px wide). Do not set `wide: true` on apparel; they must not stretch to full page width.
+- Christie pastes uncleaned vendor proofs. Clean each to just the mock-up: remove "Item #", "imprint color(s)", and the vendor text above collars/hoods (even where it overlaps the garment; redraw a clean edge). Keep anything about size ("25% actual size", "Actual size", "Left chest - actual size", the ruler). No vendor names, mockup IDs, or copyright lines.
+- Item names come from the vendor invoice when she provides one, in invoice order.
