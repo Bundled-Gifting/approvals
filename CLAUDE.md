@@ -10,3 +10,4 @@
 - Proof images stay at the standard size (~340px wide). Do not set `wide: true` on apparel; they must not stretch to full page width.
 - Christie pastes uncleaned vendor proofs. Clean each to just the mock-up: remove "Item #", "imprint color(s)", and the vendor text above collars/hoods (even where it overlaps the garment; redraw a clean edge). Keep anything about size ("25% actual size", "Actual size", "Left chest - actual size", the ruler). No vendor names, mockup IDs, or copyright lines.
 - Item names come from the vendor invoice when she provides one, in invoice order.
+- Proof backgrounds are plain white: replace any colored or patterned vendor background with white so every item matches. Keep the dashed imprint-area outline on the product.
