@@ -64,7 +64,8 @@ h2{font-family:var(--display);font-weight:500;font-size:21px;margin:2px 0 0;line
 .opt span{font-size:13px;font-weight:500;display:flex;gap:6px;align-items:center}
 .opt .letter{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--pend-bg);font-size:11px;font-weight:600}
 .opt[aria-pressed="true"] .letter{background:var(--accent);color:var(--accent-ink)}
-.single img{width:100%;max-width:340px;border-radius:8px;display:block}
+.single img{width:auto;max-width:min(100%,340px);max-height:440px;border-radius:8px;display:block}
+.single img.tall{max-height:680px}
 .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .btn{font:600 14px var(--body);border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid transparent}
 .btn.approve{background:var(--ok);color:var(--surface)}
@@ -162,11 +163,11 @@ const ITEMS = [
   {"id": "rain-m", "name": "Reflect Rain Jacket - Men's", "specs": [], "img": "img/74ced4b861.jpg"},
   {"id": "rain-l", "name": "Reflect Rain Jacket - Ladies'", "specs": [], "img": "img/9e3a2844b7.jpg"},
   {"id": "charger", "name": "MagSecure Combo Charger", "specs": [], "img": "img/4c6a8d8d65.jpg"},
-  {"id": "ogio-qz-m", "name": "OGIO Transcend 1/4-Zip", "specs": [], "img": "img/8e4accacfc.jpg"},
-  {"id": "ogio-qz-l", "name": "OGIO Women's Transcend 1/4-Zip", "specs": [], "img": "img/0a5c81cde9.jpg"},
-  {"id": "ogio-fz-m", "name": "OGIO Transcend Full-Zip", "specs": [], "img": "img/7c11f578e6.jpg"},
-  {"id": "ogio-fz-l", "name": "OGIO Women's Transcend Full-Zip", "specs": [], "img": "img/98fe4a35fd.jpg"},
-  {"id": "ogio-pack", "name": "OGIO Commuter XL Pack", "specs": [], "img": "img/d018c46a94.jpg"}
+  {"id": "ogio-qz-m", "name": "OGIO Transcend 1/4-Zip", "specs": [], "tall": true, "img": "img/8e4accacfc.jpg"},
+  {"id": "ogio-qz-l", "name": "OGIO Women's Transcend 1/4-Zip", "specs": [], "tall": true, "img": "img/0a5c81cde9.jpg"},
+  {"id": "ogio-fz-m", "name": "OGIO Transcend Full-Zip", "specs": [], "tall": true, "img": "img/7c11f578e6.jpg"},
+  {"id": "ogio-fz-l", "name": "OGIO Women's Transcend Full-Zip", "specs": [], "tall": true, "img": "img/98fe4a35fd.jpg"},
+  {"id": "ogio-pack", "name": "OGIO Commuter XL Pack", "specs": [], "tall": true, "img": "img/d018c46a94.jpg"}
 ];
 
 const state = {};      // id -> saved record from the store
@@ -242,7 +243,7 @@ function render(){
     } else {
       const s = document.createElement("div");
       s.className = "single";
-      s.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo"${it.wide ? ' style="max-width:100%"' : ""}>`;
+      s.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo"${it.tall ? ' class="tall"' : ""}${it.wide ? ' style="max-width:100%"' : ""}>`;
       card.appendChild(s);
     }
 

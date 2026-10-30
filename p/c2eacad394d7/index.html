@@ -64,7 +64,8 @@ h2{font-family:var(--display);font-weight:500;font-size:21px;margin:2px 0 0;line
 .opt span{font-size:13px;font-weight:500;display:flex;gap:6px;align-items:center}
 .opt .letter{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--pend-bg);font-size:11px;font-weight:600}
 .opt[aria-pressed="true"] .letter{background:var(--accent);color:var(--accent-ink)}
-.single img{width:100%;max-width:340px;border-radius:8px;display:block}
+.single img{width:auto;max-width:min(100%,340px);max-height:440px;border-radius:8px;display:block}
+.single img.tall{max-height:680px}
 .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .btn{font:600 14px var(--body);border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid transparent}
 .btn.approve{background:var(--ok);color:var(--surface)}
@@ -231,7 +232,7 @@ function render(){
     } else {
       const s = document.createElement("div");
       s.className = "single";
-      s.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo"${it.wide ? ' style="max-width:100%"' : ""}>`;
+      s.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo"${it.tall ? ' class="tall"' : ""}${it.wide ? ' style="max-width:100%"' : ""}>`;
       card.appendChild(s);
     }
 
