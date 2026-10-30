@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<title>Bundled Proof Approval</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: proof sheet — summary strip, then one card per item, options as a pick-one row */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#1b2230; --muted:#5d6676; --line:#dde1e8;
+  --accent:#2f4a7a; --accent-ink:#ffffff; --logo-filter:none;
+  --ok:#1f7a4d; --ok-bg:#e3f3ea; --warn:#9a5b0c; --warn-bg:#fbefd9; --pend:#5d6676; --pend-bg:#eceef2;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161d; --surface:#1b212b; --ink:#e8ebf1; --muted:#9aa3b2; --line:#2c3441;
+  --accent:#8fb0ea; --accent-ink:#0f1520; --logo-filter:invert(1);
+  --ok:#6fd3a0; --ok-bg:#183327; --warn:#f2bd6b; --warn-bg:#3a2b14; --pend:#9aa3b2; --pend-bg:#262d38; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161d; --surface:#1b212b; --ink:#e8ebf1; --muted:#9aa3b2; --line:#2c3441;
+  --accent:#8fb0ea; --accent-ink:#0f1520; --logo-filter:invert(1);
+  --ok:#6fd3a0; --ok-bg:#183327; --warn:#f2bd6b; --warn-bg:#3a2b14; --pend:#9aa3b2; --pend-bg:#262d38; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-direction:column;gap:6px}
+.topbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px;margin-bottom:14px}
+.logo{width:min(260px,100%);height:auto;display:block;filter:var(--logo-filter)}
+.contact{font-style:normal;display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-size:14px;font-weight:500;user-select:text;min-width:0}
+.contact span{overflow-wrap:anywhere}
+@media (max-width:520px){.contact{align-items:flex-start}}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.1;margin:0;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:62ch}
+.summary{display:flex;flex-wrap:wrap;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.count{font-family:var(--display);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 180px;height:8px;border-radius:99px;background:var(--pend-bg);overflow:hidden;min-width:0}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.notice{font-size:13px;color:var(--warn);background:var(--warn-bg);border-radius:8px;padding:10px 12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.card-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:10px}
+.card-head > div{min-width:0}
+.itemno{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+h2{font-family:var(--display);font-weight:500;font-size:21px;margin:2px 0 0;line-height:1.2}
+.specs{display:flex;flex-wrap:wrap;gap:6px 16px;margin:6px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted)}
+.specs b{color:var(--ink);font-weight:500}
+.attn{margin:10px 0 0;font-size:14px;line-height:1.45;color:#1d4fb8;background:#e8f0fe;border-left:4px solid #1d4fb8;border-radius:6px;padding:8px 12px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .attn{color:#9cc0ff;background:#17243d;border-color:#9cc0ff}}
+:root[data-theme="dark"] .attn{color:#9cc0ff;background:#17243d;border-color:#9cc0ff}
+.chip{font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.chip.pending{background:var(--pend-bg);color:var(--pend)}
+.chip.approved{background:var(--ok-bg);color:var(--ok)}
+.chip.changes{background:var(--warn-bg);color:var(--warn)}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.opt{all:unset;box-sizing:border-box;cursor:pointer;border:2px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.opt:focus-visible,.btn:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opt[aria-pressed="true"]{border-color:var(--accent)}
+.opt img{width:100%;aspect-ratio:3/5;object-fit:cover;border-radius:6px;display:block;max-width:100%}
+.opt span{font-size:13px;font-weight:500;display:flex;gap:6px;align-items:center}
+.opt .letter{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--pend-bg);font-size:11px;font-weight:600}
+.opt[aria-pressed="true"] .letter{background:var(--accent);color:var(--accent-ink)}
+.single img{width:100%;max-width:340px;border-radius:8px;display:block}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:600 14px var(--body);border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid transparent}
+.btn.approve{background:var(--ok);color:var(--surface)}
+.btn.change{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.link{background:none;border:none;color:var(--accent);padding:10px 4px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.hint{font-size:13px;color:var(--muted)}
+.notebox{display:flex;flex-direction:column;gap:8px}
+textarea{font:14px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;min-height:80px;resize:vertical;width:100%;box-sizing:border-box}
+.result{font-size:14px;border-radius:8px;padding:10px 12px}
+.result.approved{background:var(--ok-bg);color:var(--ok)}
+.result.changes{background:var(--warn-bg);color:var(--warn)}
+.result p{margin:2px 0 0;color:var(--ink)}
+.history{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.history h3{font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px}
+.history ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.history b{color:var(--ink);font-weight:500}
+.history q{color:var(--ink)}
+.who{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.who label{font-weight:600;font-size:14px}
+.who input{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;max-width:360px;width:100%;box-sizing:border-box}
+.who input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+footer{font-size:13px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+.wipwrap{position:relative}
+.wip{position:absolute;inset:0;background:rgba(200,30,30,.22);border:3px solid #c81e1e;border-radius:8px;display:grid;place-items:center;pointer-events:none}
+.wip span{background:#c81e1e;color:#fff;font:700 18px var(--body);text-align:center;padding:12px 18px;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:80%}
+.wip small{display:block;font-weight:500;font-size:14px;margin-top:2px}
+.opt .optname{font-weight:600;font-size:14px;align-items:flex-start}
+.opt .orig{align-self:flex-start;font-size:13px;font-weight:700;color:#7a4b00;background:#ffe9a8;border-radius:99px;padding:4px 12px}
+.opt.origopt{border-color:#e0a800;background:#fff8e1}
+.opt.origopt[aria-pressed="true"]{border-color:var(--accent)}
+.opt .otag{align-self:flex-start;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--pend-bg);border-radius:99px;padding:3px 10px}
+.opt .feats{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.45}
+.opt .samp{font-size:12px;color:var(--muted);font-style:italic}
+.fl{display:flex;flex-wrap:wrap;gap:6px}
+.fl span[role=radio]{font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 14px;cursor:pointer}
+.fl span[aria-checked="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.fl span:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.checklist{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.checklist h2{font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.checklist ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px}
+.checklist button{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:14px;background:var(--bg)}
+.checklist button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.checklist i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;font-weight:700;font-size:13px;flex:none}
+.checklist .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.checklist .st{font-size:12px;font-weight:600;white-space:nowrap}
+.checklist .ok i{background:var(--ok);color:#fff}.checklist .ok .st{color:var(--ok)}
+.checklist .chg i{background:#c81e1e;color:#fff}.checklist .chg .st{color:#c81e1e}
+.checklist .pend i{background:var(--pend-bg);color:var(--pend)}.checklist .pend .st{color:var(--pend)}
+.card.mini{padding:0;gap:0;border-color:var(--ok);background:var(--ok-bg)}
+.minibtn{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:12px}
+.minibtn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.minibtn img{width:56px;height:56px;object-fit:contain;background:#fff;border-radius:6px;flex:none}
+.minitxt{display:flex;flex-direction:column;min-width:0;flex:1}
+.minitxt b{font-weight:600;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.minichip{font-size:13px;font-weight:700;color:var(--ok);white-space:nowrap}
+.minimore{font-size:13px;color:var(--accent);font-weight:600}
+@media (max-width:520px){.minimore{display:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="topbar">
+      <img class="logo" src="../../assets/logo.png" alt="Bundled Corporate Gifting Solutions, www.bundledgifting.com">
+      <address class="contact"><span>Orders@BundledGifting.com</span><span>1 (313) 600-2765</span></address>
+    </div>
+    <div class="eyebrow">Proof approval</div>
+    <h1>AIT 1 &amp; 3 Year Anniversary Reorder</h1>
+    <p class="lede">Please review each item below. Pick your option where there's a choice, then approve it or request changes. Your answers save automatically.</p>
+  </header>
+
+  <div class="summary" aria-live="polite">
+    <span class="count" id="count">0 of 8</span><span class="hint">items approved</span>
+    <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
+  </div>
+  <div class="notice" id="notice" hidden></div>
+
+  <div id="items"></div>
+  <footer>Questions? Email Orders@BundledGifting.com or call 1 (313) 600-2765.</footer>
+</div>
+
+<script>
+/* ===== ORDER SETUP: change these for each new order ===== */
+const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPzfjtOiH0F7s0GzUrSK05MuNX7hos9-oTDu4gYlClJCg/exec";
+const ORDER = { id: "ait-anniv-3487-c2eacad394d7", name: "AIT 1 & 3 Year Anniversary Reorder #3487" };
+const ITEMS = [
+  {"id": "backpack", "name": "Samsonite Classic Business 2.0 Everyday Laptop Backpack", "specs": [], "img": "img/87a553f5d8.jpg"}
+];
+
+const state = {};      // id -> saved record from the store
+const history = {};    // id -> every answer for the item, oldest first
+const local = {};      // id -> {pick, editing, noteOpen, note}
+let canWrite = false;
+let loaded = false;   // true once saved answers have come back from Google
+
+function esc(s){ const d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}); }catch(e){ return ""; } }
+
+function render(){
+  const host = document.getElementById("items");
+  host.innerHTML = "";
+  let approved = 0;
+  const checks = [];
+  ITEMS.forEach((it, i) => {
+    const rec = it.fixed || state[it.id];
+    const l = local[it.id] || (local[it.id] = {pick: rec && rec.option || null, editing:false, noteOpen:false, note:""});
+    const status = rec ? rec.status : "pending";
+    if (status === "approved") approved++;
+    const showForm = !rec || l.editing;
+    const firstLine = it.name.split("\n")[0];
+    const chosen = rec && rec.option && it.options ? it.options.find(o => o.key === rec.option) : null;
+    const thumb = (chosen && chosen.img) || it.img || (it.options && it.options[0].img);
+    checks.push({id: it.id, n: i+1, name: firstLine, status});
+    if (loaded && status === "approved" && !l.editing && !l.open){
+      const mini = document.createElement("section");
+      mini.className = "card mini"; mini.id = "card-" + it.id;
+      const btn = document.createElement("button"); btn.type = "button"; btn.className = "minibtn";
+      btn.setAttribute("aria-label", `${firstLine}, approved. Show details`);
+      btn.innerHTML = `<img src="${thumb}" alt=""><span class="minitxt"><span class="itemno">Item ${i+1} of ${ITEMS.length}</span><b>${esc(firstLine)}</b>${chosen ? `<span class="hint">Option ${esc(rec.option)}, ${esc(chosen.label)}</span>` : ""}</span><span class="minichip">Approved &#10003;</span><span class="minimore">View</span>`;
+      btn.onclick = () => { l.open = true; render(); const c = document.getElementById("card-" + it.id); if (c) c.scrollIntoView({block:"nearest"}); };
+      mini.appendChild(btn); host.appendChild(mini);
+      return;
+    }
+
+    const card = document.createElement("section");
+    card.className = "card"; card.id = "card-" + it.id;
+    card.setAttribute("aria-labelledby", "h-"+it.id);
+    const specs = it.specs.map(([k,v]) => k ? `<li>${esc(k)}: <b>${esc(v)}</b></li>` : `<li><b>${esc(v)}</b></li>`).join("");
+    const chipText = loaded ? {pending:"Waiting on you", approved:"Approved", changes:"Changes requested"}[status] : "";
+    card.innerHTML = `
+      <div class="card-head">
+        <div><div class="itemno">Item ${i+1} of ${ITEMS.length}</div>
+        <h2 id="h-${it.id}" style="white-space:pre-line">${esc(it.name)}</h2><ul class="specs">${specs}</ul>${it.attention ? `<p class="attn"><b>Attention:</b> ${esc(it.attention)}</p>` : ""}</div>
+        <span class="chip ${status}"${loaded ? "" : ' style="visibility:hidden"'}>${chipText}</span>
+      </div>`;
+
+    if (it.options && it.img){
+      const s0 = document.createElement("div");
+      s0.className = "single";
+      s0.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo" style="max-width:100%">`;
+      card.appendChild(s0);
+    }
+    if (it.options){
+      const grid = document.createElement("div");
+      grid.className = "options";
+      if (it.optMin) grid.style.gridTemplateColumns = `repeat(auto-fit,minmax(${it.optMin}px,1fr))`;
+      grid.setAttribute("role","group");
+      grid.setAttribute("aria-label","Choose an option");
+      it.options.forEach(o => {
+        const b = document.createElement("button");
+        b.className = "opt" + (o.orig ? " origopt" : ""); b.type = "button"; b.id = `opt-${it.id}-${o.key}`;
+        b.setAttribute("aria-pressed", String(l.pick === o.key));
+        b.disabled = !showForm || !canWrite;
+        b.innerHTML = `<img src="${o.img}" alt="Option ${o.key}: ${esc(o.label)}"${it.optFit ? ' style="aspect-ratio:auto;object-fit:contain;background:#fff"' : ""}><span class="optname"><i class="letter">${o.key}</i>${esc(o.label)}</span>${o.orig ? `<span class="orig">&#9733; ${esc(o.orig)}</span>` : ""}${o.tag ? `<span class="otag">${esc(o.tag)}</span>` : ""}${o.colors ? `<span class="fl" role="radiogroup" aria-label="Choose a foil color">${o.colors.map(c => `<span role="radio" tabindex="0" data-c="${esc(c)}" aria-checked="${l.pick === o.key && l.color === c}">${esc(c)}</span>`).join("")}</span>` : ""}${o.feats ? `<ul class="feats">${o.feats.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}${o.sample ? `<small class="samp">${esc(o.sample)}</small>` : ""}`;
+        if (o.colors) b.querySelectorAll("[data-c]").forEach(cc => { const go = e => { e.stopPropagation(); e.preventDefault(); if (b.disabled) return; l.pick = o.key; l.color = cc.dataset.c; render(); }; cc.onclick = go; cc.onkeydown = e => { if (e.key === "Enter" || e.key === " ") go(e); }; });
+        b.onclick = () => { if (l.pick !== o.key) l.color = null; l.pick = o.key; render(); };
+        grid.appendChild(b);
+      });
+      card.appendChild(grid);
+    } else {
+      const s = document.createElement("div");
+      s.className = "single";
+      s.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo"${it.wide ? ' style="max-width:100%"' : ""}>`;
+      card.appendChild(s);
+    }
+
+    if (rec && !l.editing){
+      const optLabel = it.options && rec.option ? it.options.find(o=>o.key===rec.option) : null;
+      const r = document.createElement("div");
+      r.className = "result " + rec.status;
+      r.innerHTML = rec.status === "approved"
+        ? `<b>Approved${optLabel ? ` — Option ${rec.option}, ${esc(optLabel.label)}` : ""}</b> · ${esc(fmtDate(rec.at))}${rec.note ? `<p>${esc(rec.note)}</p>` : ""}`
+        : `<b>Changes requested</b> · ${esc(fmtDate(rec.at))}<p>${esc(rec.note || "")}</p>`;
+      card.appendChild(r);
+      const hist = it.fixed ? [] : (history[it.id] || []);
+      if (hist.length > 1){
+        const h = document.createElement("div"); h.className = "history";
+        h.innerHTML = `<h3>Answer history</h3><ol>${hist.map((x, n) => {
+          const ol = it.options && x.option ? it.options.find(o=>o.key===x.option) : null;
+          const what = x.status === "approved"
+            ? `Approved${ol ? ` — Option ${esc(x.option)}, ${esc(ol.label)}` : (x.option ? ` — Option ${esc(x.option)}` : "")}`
+            : `Changes requested${x.note ? `: <q>${esc(x.note)}</q>` : ""}`;
+          return `<li>${n ? "Changed to " : ""}<b>${what}</b> · ${esc(fmtDate(x.at))}</li>`;
+        }).join("")}</ol>`;
+        card.appendChild(h);
+      }
+      if (it.fixed && l.open){ const a2 = document.createElement("div"); a2.className = "actions"; const cl = document.createElement("button"); cl.className = "btn link"; cl.type = "button"; cl.textContent = "Collapse"; cl.onclick = () => { l.open = false; render(); }; a2.appendChild(cl); card.appendChild(a2); }
+      if (canWrite && !it.fixed){
+        const a = document.createElement("div"); a.className = "actions";
+        const e = document.createElement("button"); e.className="btn link"; e.type="button"; e.id=`edit-${it.id}`;
+        e.textContent = "Change my answer";
+        e.onclick = () => { l.editing = true; l.noteOpen = false; render(); };
+        a.appendChild(e);
+        if (status === "approved" && l.open){ const cl = document.createElement("button"); cl.className = "btn link"; cl.type = "button"; cl.textContent = "Collapse"; cl.onclick = () => { l.open = false; render(); }; a.appendChild(cl); }
+        card.appendChild(a);
+      }
+    } else {
+      const a = document.createElement("div"); a.className = "actions";
+      const pickedOpt = it.options && it.options.find(o => o.key === l.pick);
+      const needColor = !!(pickedOpt && pickedOpt.colors && !l.color);
+      const needPick = (it.options && !l.pick) || needColor;
+      const ap = document.createElement("button"); ap.className="btn approve"; ap.type="button"; ap.id=`approve-${it.id}`;
+      ap.textContent = it.options && l.pick ? `Approve Option ${l.pick}` : "Approve";
+      ap.disabled = !canWrite || needPick;
+      ap.onclick = () => save(it, {status:"approved", option: l.pick || null, note: needColor || !(pickedOpt && pickedOpt.colors) ? "" : "Foil color: " + l.color});
+      const ch = document.createElement("button"); ch.className="btn change"; ch.type="button"; ch.id=`change-${it.id}`;
+      ch.textContent = "Request changes"; ch.disabled = !canWrite;
+      ch.onclick = () => { l.noteOpen = !l.noteOpen; render(); };
+      a.append(ap, ch);
+      if (needPick && canWrite){ const h=document.createElement("span"); h.className="hint"; h.textContent = needColor ? "Pick Silver or Gold in Option " + l.pick : "Pick an option to approve"; a.appendChild(h); }
+      if (l.editing){ const c=document.createElement("button"); c.className="btn link"; c.type="button"; c.textContent="Cancel"; c.onclick=()=>{l.editing=false; l.pick = rec && rec.option || null; render();}; a.appendChild(c); }
+      if (!loaded) a.style.visibility = "hidden";
+      card.appendChild(a);
+
+      if (l.noteOpen){
+        const nb = document.createElement("div"); nb.className="notebox";
+        nb.innerHTML = `<label class="hint" for="note-${it.id}">What should we change?</label>`;
+        const ta = document.createElement("textarea"); ta.id = `note-${it.id}`; ta.value = l.note;
+        ta.placeholder = "Example: make the logo smaller and center it";
+        ta.oninput = () => { l.note = ta.value; send.disabled = !ta.value.trim(); };
+        const send = document.createElement("button"); send.className="btn approve"; send.type="button"; send.id=`send-${it.id}`;
+        send.textContent = "Send change request"; send.disabled = !l.note.trim();
+        send.onclick = () => save(it, {status:"changes", option: l.pick || null, note: l.note.trim()});
+        const row = document.createElement("div"); row.className="actions"; row.appendChild(send);
+        nb.append(ta, row); card.appendChild(nb);
+      }
+    }
+    if (status === "changes" && !l.editing){
+      const media = card.querySelector(".single, .options");
+      if (media){ media.classList.add("wipwrap"); const ov = document.createElement("div"); ov.className = "wip";
+        ov.innerHTML = `<span>Change in progress<small>We're working on a new mock-up for you</small></span>`; media.appendChild(ov); }
+    }
+    host.appendChild(card);
+  });
+  const cl = document.getElementById("checklist");
+  if (cl){
+  const MARK = {approved:["ok","&#10003;","Approved"], changes:["chg","!","Change in progress"], pending:["pend","&#9675;","Waiting on you"]};
+  cl.innerHTML = `<h2>Your items</h2><ol>${checks.map(c => { const m = MARK[c.status] || MARK.pending; return `<li><button type="button" data-go="${c.id}" class="${m[0]}"><i aria-hidden="true">${m[1]}</i><span class="nm">${esc(c.name)}</span><span class="st">${m[2]}</span></button></li>`; }).join("")}</ol>`;
+  cl.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { const c = document.getElementById("card-" + b.dataset.go); if (c) c.scrollIntoView({behavior:"smooth", block:"start"}); });
+  cl.hidden = !loaded;
+  }
+  document.getElementById("count").textContent = !loaded ? "…" : `${approved} of ${ITEMS.length}`;
+  document.getElementById("barfill").style.width = (approved/ITEMS.length*100) + "%";
+  document.querySelectorAll(".summary").forEach(sm => { sm.style.visibility = loaded ? "" : "hidden"; });
+}
+
+
+async function loadAnswers(){
+  const r = await fetch(API + "?order=" + encodeURIComponent(ORDER.id), {cache:"no-store"});
+  const j = await r.json();
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({answers: (j && j.answers) || {}, history: (j && j.history) || {}})); } catch(e){}
+  Object.keys(history).forEach(k => delete history[k]);
+  if (j && j.history) Object.assign(history, j.history);
+  return (j && j.answers) || {};
+}
+function applyAnswers(ans){
+  Object.keys(state).forEach(k => delete state[k]);
+  Object.assign(state, ans);
+  ITEMS.forEach(it => { const l = local[it.id]; if (!l || (!l.editing && !l.noteOpen)) local[it.id] = {pick: state[it.id] ? state[it.id].option : (l && l.pick) || null, editing:false, noteOpen:false, note:""}; });
+}
+
+async function save(it, rec){
+  const name = "";
+  hideNotice();
+  canWrite = false; render();
+  const body = JSON.stringify({orderId: ORDER.id, orderName: ORDER.name, itemId: it.id, itemName: it.name,
+    status: rec.status, option: rec.option || "", note: rec.note || "", name, pageUrl: location.href.split("#")[0]});
+  try {
+    await fetch(API, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body});
+  } catch(e){
+    canWrite = true; render(); showNotice("Your answer didn't save. Check your connection and try again."); return;
+  }
+  // Show the answer right away, then confirm against the saved record.
+  state[it.id] = {status: rec.status, option: rec.option || null, note: rec.note || "", name, at: new Date().toISOString()};
+  (history[it.id] = history[it.id] || []).push(state[it.id]);
+  local[it.id] = {pick: rec.option || null, editing:false, noteOpen:false, note:""};
+  canWrite = true; render();
+  try { applyAnswers(await loadAnswers()); render(); } catch(e){}
+}
+function showNotice(msg){ const n=document.getElementById("notice"); n.textContent = msg; n.hidden = false; }
+function hideNotice(){ document.getElementById("notice").hidden = true; }
+
+(function(){
+  const h = document.querySelector("h1"), m = ORDER.name.match(/^(.*?)\s*(#\S+)$/);
+  if (m){ h.textContent = m[1] + " "; const sm = document.createElement("span"); sm.textContent = "Internal PO " + m[2];
+    sm.style.cssText = "font-size:.45em;font-weight:500;color:var(--muted);letter-spacing:.02em;white-space:nowrap"; h.appendChild(sm); }
+  else h.textContent = ORDER.name;
+})();
+
+const CACHE_KEY = "bundled-approvals:" + ORDER.id;
+try {
+  const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+  if (c && c.answers){ Object.assign(history, c.history || {}); applyAnswers(c.answers); loaded = true; }
+} catch(e){}
+render();
+loadAnswers()
+  .then(ans => { applyAnswers(ans); loaded = true; canWrite = true; render(); })
+  .catch(() => { loaded = true; canWrite = true; render(); showNotice("We couldn't load earlier answers. You can still submit yours."); });
+</script>
+</body>
+</html>
