@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<title>Bundled Proof Approval</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#1b2230; --muted:#5d6676; --line:#dde1e8;
+  --accent:#2f4a7a; --logo-filter:none;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161d; --surface:#1b212b; --ink:#e8ebf1; --muted:#9aa3b2; --line:#2c3441;
+  --accent:#8fb0ea; --logo-filter:invert(1); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161d; --surface:#1b212b; --ink:#e8ebf1; --muted:#9aa3b2; --line:#2c3441;
+  --accent:#8fb0ea; --logo-filter:invert(1); color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-direction:column;gap:6px}
+.topbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px;margin-bottom:14px}
+.logo{width:min(260px,100%);height:auto;display:block;filter:var(--logo-filter)}
+.contact{font-style:normal;display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-size:14px;font-weight:500;user-select:text;min-width:0}
+.contact span{overflow-wrap:anywhere}
+@media (max-width:520px){.contact{align-items:flex-start}}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.1;margin:0;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:62ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px}
+h2{font-family:var(--display);font-weight:500;font-size:21px;margin:0;line-height:1.2}
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.photos img{width:100%;max-width:340px;max-height:440px;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;margin:0 auto}
+footer{font-size:13px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topbar">
+      <img class="logo" src="../../assets/logo.png" alt="Bundled Corporate Gifting Solutions, www.bundledgifting.com">
+      <address class="contact"><span>Orders@BundledGifting.com</span><span>1 (313) 600-2765</span></address>
+    </div>
+    <div class="eyebrow">For your review</div>
+    <h1>Plante Moran</h1>
+    <p class="lede">Here are photos of the stress balls we received.</p>
+  </header>
+
+  <section class="card" aria-labelledby="h-balls">
+    <h2 id="h-balls">Stress Balls</h2>
+    <div class="photos">
+      <img src="img/ball1.jpg" alt="Blue stress ball with Plante Moran logo, front">
+      <img src="img/ball2.jpg" alt="Blue stress ball, back">
+      <img src="img/ball3.jpg" alt="Stress ball in its box">
+    </div>
+  </section>
+
+  <footer>Questions? Email Orders@BundledGifting.com or call 1 (313) 600-2765.</footer>
+</div>
+</body>
+</html>
