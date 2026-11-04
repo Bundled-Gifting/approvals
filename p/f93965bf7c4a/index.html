@@ -158,7 +158,7 @@ const ORDER = { id: "pulsar-new-hire-3478-f93965bf7c4a", name: "Pulsar New Hire 
 const ITEMS = [
   {"id": "power-bank", "name": "Power Bank", "specs": [], "optFit": true, "optMin": 300, "optH": 210, "attention": "Please choose one power bank. Option A, the green Vivid Boost Power Bank, is your original choice, but it is currently out of stock. Options B, C and D are similar power banks. The details under each one show how it compares to your original.", "options": [{"key": "A", "label": "Vivid Boost Power Bank", "orig": "Your original choice", "feats": ["Currently out of stock", "Green", "5000 mAh battery", "USB-A and USB-C charging port", "LED indicator lights", "Clip attachment", "Recharges with the included USB-C cable", "Laser engraved logo", "Size: 4 inches H x 2 1/2 inches W x 3/8 inches D"], "img": "img/407a4863a1.png"}, {"key": "B", "label": "Exo Power Bank", "feats": ["Dark gray", "Same 5000 mAh battery", "Same USB-A and USB-C charging port", "Same LED indicator lights", "No clip attachment", "Same USB-C recharging cable", "Logo printed in white instead of engraved", "Slightly shorter and a little thicker: 3 3/4 inches x 2 1/2 inches x 1/2 inch"], "img": "img/bf7914905b.png"}, {"key": "C", "label": "Mondo Power Bank", "feats": ["Black", "Larger 8000 mAh battery", "Lighted power level indicator", "Adds an LED flashlight", "No clip attachment", "Recharges with the included Micro USB cable instead of USB-C", "Same laser engraved logo", "About the same size, a little thicker: 4 5/16 inches x 2 3/4 inches x 9/16 inch"], "img": "img/b028513c6e.png"}, {"key": "D", "label": "Vivid Plus Power Bank", "feats": ["Black", "Same 5000 mAh battery", "Two USB-A charging ports, no USB-C port", "Charging indicator lights", "No clip attachment", "Recharges with the included Micro USB cable instead of USB-C", "Same laser engraved logo", "Slightly shorter and about twice as thick: 3 3/4 inches x 2 1/2 inches x 3/4 inch"], "img": "img/bf8dab4a76.png"}]},
   {"id": "pouch", "name": "Zippered Pouch", "specs": [], "img": "img/269eb48dad.png"},
-  {"id": "earbuds", "name": "Wireless Earbuds", "specs": [], "img": "img/0ef89bbee6.png"},
+  {"id": "earbuds", "name": "Wireless Earbuds", "specs": [], "maxW": 200, "img": "img/0ef89bbee6.png"},
   {"id": "badge", "name": "Retractable Badge Holder", "specs": [], "img": "img/c6a18546ea.png"}
 ];
 
@@ -235,7 +235,7 @@ function render(){
     } else {
       const s = document.createElement("div");
       s.className = "single";
-      s.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo"${it.tall ? ' class="tall"' : ""}${it.wide ? ' style="max-width:100%"' : ""}>`;
+      s.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo"${it.tall ? ' class="tall"' : ""}${it.wide ? ' style="max-width:100%"' : ""}${it.maxW ? ` style="max-width:${it.maxW}px"` : ""}>`;
       card.appendChild(s);
     }
 
