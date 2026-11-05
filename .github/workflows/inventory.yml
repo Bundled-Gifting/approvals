@@ -18,6 +18,8 @@ jobs:
         env:
           TOPREP_CLIENT_ID: ${{ secrets.TOPREP_CLIENT_ID }}
           TOPREP_CLIENT_SECRET: ${{ secrets.TOPREP_CLIENT_SECRET }}
+          TEAMBUNDLED_CLIENT_ID: ${{ secrets.TEAMBUNDLED_CLIENT_ID }}
+          TEAMBUNDLED_CLIENT_SECRET: ${{ secrets.TEAMBUNDLED_CLIENT_SECRET }}
         run: node inventory/update.mjs
       - name: Save the new numbers
         if: always()

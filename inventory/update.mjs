@@ -45,6 +45,7 @@ for (const s of shops) {
       const pv = res.data.productVariants;
       for (const n of pv.nodes) {
         if (n.product.status !== 'ACTIVE') continue;
+        if (s.match && !n.product.title.toLowerCase().includes(s.match.toLowerCase())) continue;
         const img = n.product.featuredMedia?.preview?.image?.url || '';
         items.push({ product: n.product.title, size: n.title === 'Default Title' ? '' : n.title, qty: n.inventoryQuantity ?? 0, image: img });
       }
@@ -53,7 +54,7 @@ for (const s of shops) {
 
     items.sort((a, b) => a.product.localeCompare(b.product));
     writeFileSync(new URL(`./data/${s.code}.json`, import.meta.url),
-      JSON.stringify({ ok: true, client: s.client, updated, shopUrl, items }, null, 1) + '\n');
+      JSON.stringify({ ok: true, client: s.client, updated, shopUrl: s.showShop === false ? '' : shopUrl, items }, null, 1) + '\n');
     console.log(`${s.client}: ${items.length} rows`);
   } catch (e) {
     failed++;
