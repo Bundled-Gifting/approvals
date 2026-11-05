@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<title>Inventory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#1b2230; --muted:#5d6676; --line:#dde1e8;
+  --accent:#2f4a7a; --logo-filter:none;
+  --ok:#1f7a4d; --warn:#9a5b0c; --warn-bg:#fbefd9; --bad:#b3261e; --bad-bg:#fbe4e2;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161d; --surface:#1b212b; --ink:#e8ebf1; --muted:#9aa3b2; --line:#2c3441;
+  --accent:#8fb0ea; --logo-filter:invert(1);
+  --ok:#6fd3a0; --warn:#f2bd6b; --warn-bg:#3a2b14; --bad:#ff9b92; --bad-bg:#3d1c1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161d; --surface:#1b212b; --ink:#e8ebf1; --muted:#9aa3b2; --line:#2c3441;
+  --accent:#8fb0ea; --logo-filter:invert(1);
+  --ok:#6fd3a0; --warn:#f2bd6b; --warn-bg:#3a2b14; --bad:#ff9b92; --bad-bg:#3d1c1a; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-direction:column;gap:6px}
+.topbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px;margin-bottom:14px}
+.logo{width:min(260px,100%);height:auto;display:block;filter:var(--logo-filter)}
+.contact{font-style:normal;display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-size:14px;font-weight:500;min-width:0}
+.contact span{overflow-wrap:anywhere}
+@media (max-width:520px){.contact{align-items:flex-start}}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.1;margin:0;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:62ch}
+.summary{display:flex;flex-wrap:wrap;gap:10px 28px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat{display:flex;flex-direction:column}
+.stat b{font-family:var(--display);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+h2{font-family:var(--display);font-weight:500;font-size:19px;margin:0;line-height:1.2;overflow-wrap:anywhere}
+.total{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--line)}
+.qty{font-weight:600;font-variant-numeric:tabular-nums}
+.qty.low{color:var(--warn)}
+.qty.out{color:var(--bad)}
+.key{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted)}
+.key i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.notfound{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+footer{font-size:13px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topbar">
+      <img class="logo" src="../assets/logo.png" alt="Bundled Corporate Gifting Solutions, www.bundledgifting.com">
+      <address class="contact"><span>Orders@BundledGifting.com</span><span>1 (313) 600-2765</span></address>
+    </div>
+    <div class="eyebrow">Shop inventory</div>
+    <h1 id="title">Your inventory</h1>
+    <p class="lede" id="lede">Loading your inventory…</p>
+  </header>
+  <div id="main"></div>
+  <footer>Questions? Email Orders@BundledGifting.com or call 1 (313) 600-2765.</footer>
+</div>
+<script>
+const API = "https://script.google.com/macros/s/AKfycbzOIMhdCnb9sJ9uxrGPAAdTlPRSAqKQRKjs6v6lvZn1yB2l_OPmKCpGFC9wCm-AJuqAZA/exec";
+const LOW = 10;
+function esc(s){ const d=document.createElement("div"); d.textContent = s == null ? "" : String(s); return d.innerHTML; }
+const code = new URLSearchParams(location.search).get("c") || "";
+const main = document.getElementById("main");
+const lede = document.getElementById("lede");
+
+function notFound(msg){ lede.textContent = ""; main.innerHTML = `<div class="notfound">${esc(msg)}</div>`; }
+
+async function load(){
+  if(!code){ notFound("This link is incomplete. Please contact Bundled Gifting Solutions."); return; }
+  let data;
+  try{
+    const r = await fetch(API + "?c=" + encodeURIComponent(code), {cache:"no-store"});
+    data = await r.json();
+  }catch(e){ notFound("We couldn't load your inventory right now. Please try again in a few minutes."); return; }
+  if(!data || !data.ok){ notFound(data && data.message ? data.message : "This link is not valid. Please contact Bundled Gifting Solutions."); return; }
+
+  document.title = data.client + " Inventory";
+  document.getElementById("title").textContent = data.client + " Inventory";
+  lede.textContent = data.updated ? "Remaining stock as of " + data.updated + ". Updated every morning." : "Updated every morning.";
+
+  const items = data.items || [];
+  if(!items.length){ main.innerHTML = `<div class="notfound">No active products found.</div>`; return; }
+
+  const groups = new Map();
+  items.forEach(it => { if(!groups.has(it.product)) groups.set(it.product, []); groups.get(it.product).push(it); });
+
+  let units = 0, low = 0, out = 0;
+  items.forEach(it => { const q = Number(it.qty)||0; units += Math.max(q,0); if(q<=0) out++; else if(q<=LOW) low++; });
+
+  const cards = [...groups].map(([name, rows]) => {
+    const tot = rows.reduce((s,r)=>s+Math.max(Number(r.qty)||0,0),0);
+    const lis = rows.map(r => {
+      const q = Number(r.qty)||0;
+      const cls = q<=0 ? "out" : (q<=LOW ? "low" : "");
+      return `<li><span>${esc(r.size || "Quantity")}</span><span class="qty ${cls}">${q<=0 ? "Out of stock" : q}</span></li>`;
+    }).join("");
+    return `<div class="card"><div class="card-head"><h2>${esc(name)}</h2><span class="total">${tot} total</span></div><ul class="rows">${lis}</ul></div>`;
+  }).join("");
+
+  main.innerHTML =
+    `<div class="summary">
+       <div class="stat"><b>${units}</b><span>Units on hand</span></div>
+       <div class="stat"><b>${groups.size}</b><span>Products</span></div>
+       <div class="stat"><b>${low}</b><span>Running low</span></div>
+       <div class="stat"><b>${out}</b><span>Out of stock</span></div>
+     </div>
+     <div class="key"><span><i style="background:var(--warn)"></i>${LOW} or fewer left</span><span><i style="background:var(--bad)"></i>Out of stock</span></div>
+     <div class="grid" style="margin-top:14px">${cards}</div>`;
+}
+load();
+</script>
+</body></html>
