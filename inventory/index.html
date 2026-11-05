@@ -47,6 +47,7 @@ h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,36px);lin
 .shopbtn{align-self:flex-start;display:inline-block;margin-top:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:10px 16px;border-radius:8px}
 :root[data-theme="dark"] .shopbtn{color:#0f1520}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .shopbtn{color:#0f1520}}
+.shopbtn[hidden]{display:none}
 .shopbtn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 h2{font-family:var(--display);font-weight:500;font-size:19px;margin:0;line-height:1.2;overflow-wrap:anywhere}
 .total{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
