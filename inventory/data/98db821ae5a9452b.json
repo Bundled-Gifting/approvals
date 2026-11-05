@@ -1,112 +1,134 @@
 {
  "ok": true,
  "client": "Top Rep",
- "updated": "Nov 5, 2026, 3:16 PM",
+ "updated": "Nov 5, 2026, 5:28 PM",
+ "shopUrl": "https://toprepshop.com",
  "items": [
   {
    "product": "Closers Hoodie",
    "size": "S",
-   "qty": 11
+   "qty": 11,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_5.png?v=1734364400"
   },
   {
    "product": "Closers Hoodie",
    "size": "M",
-   "qty": 25
+   "qty": 25,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_5.png?v=1734364400"
   },
   {
    "product": "Closers Hoodie",
    "size": "L",
-   "qty": 27
+   "qty": 27,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_5.png?v=1734364400"
   },
   {
    "product": "Closers Hoodie",
    "size": "XL",
-   "qty": 28
+   "qty": 28,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_5.png?v=1734364400"
   },
   {
    "product": "Closers Hoodie",
    "size": "2XL",
-   "qty": 26
+   "qty": 26,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_5.png?v=1734364400"
   },
   {
    "product": "Closers Hoodie",
    "size": "3XL",
-   "qty": 25
+   "qty": 25,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_5.png?v=1734364400"
   },
   {
    "product": "Closers Hoodie",
    "size": "4XL",
-   "qty": 5
+   "qty": 5,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_5.png?v=1734364400"
   },
   {
    "product": "Hat",
    "size": "",
-   "qty": 90
+   "qty": 90,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages.png?v=1734363678"
   },
   {
    "product": "I Went Pro Hoodie",
    "size": "S",
-   "qty": 2
+   "qty": 2,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_6.png?v=1734364381"
   },
   {
    "product": "I Went Pro Hoodie",
    "size": "M",
-   "qty": 12
+   "qty": 12,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_6.png?v=1734364381"
   },
   {
    "product": "I Went Pro Hoodie",
    "size": "L",
-   "qty": 13
+   "qty": 13,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_6.png?v=1734364381"
   },
   {
    "product": "I Went Pro Hoodie",
    "size": "XL",
-   "qty": 13
+   "qty": 13,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_6.png?v=1734364381"
   },
   {
    "product": "I Went Pro Hoodie",
    "size": "2XL",
-   "qty": 5
+   "qty": 5,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_6.png?v=1734364381"
   },
   {
    "product": "I Went Pro Hoodie",
    "size": "3XL",
-   "qty": 1
+   "qty": 1,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_6.png?v=1734364381"
   },
   {
    "product": "T-shirt",
    "size": "S",
-   "qty": 7
+   "qty": 7,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_2.png?v=1734364092"
   },
   {
    "product": "T-shirt",
    "size": "M",
-   "qty": 12
+   "qty": 12,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_2.png?v=1734364092"
   },
   {
    "product": "T-shirt",
    "size": "L",
-   "qty": 24
+   "qty": 24,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_2.png?v=1734364092"
   },
   {
    "product": "T-shirt",
    "size": "XL",
-   "qty": 25
+   "qty": 25,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_2.png?v=1734364092"
   },
   {
    "product": "T-shirt",
    "size": "2XL",
-   "qty": 3
+   "qty": 3,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_2.png?v=1734364092"
   },
   {
    "product": "T-shirt",
    "size": "3XL",
-   "qty": 1
+   "qty": 1,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/TopRepSiteImages_2.png?v=1734364092"
   },
   {
    "product": "Water Bottle",
    "size": "",
-   "qty": 49
+   "qty": 49,
+   "image": "https://cdn.shopify.com/s/files/1/0730/1110/1945/files/Toprepwaterbottle.png?v=1736195594"
   }
  ]
 }
