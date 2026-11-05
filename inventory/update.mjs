@@ -26,6 +26,7 @@ for (const s of shops) {
     if (!tok.access_token) throw new Error('token: ' + JSON.stringify(tok).slice(0, 200));
 
     const items = [];
+    let shopUrl = '';
     let cursor = null;
     do {
       const res = await fetch(`https://${s.domain}/admin/api/${API_VERSION}/graphql.json`, {
@@ -34,22 +35,25 @@ for (const s of shops) {
         body: JSON.stringify({
           query: `query ($cursor: String) { productVariants(first: 250, after: $cursor) {
             pageInfo { hasNextPage endCursor }
-            nodes { title inventoryQuantity product { title status } } } }`,
+            nodes { title inventoryQuantity product { title status featuredMedia { preview { image { url } } } } } }
+          shop { primaryDomain { url } } }`,
           variables: { cursor }
         })
       }).then(r => r.json());
       if (res.errors) throw new Error(JSON.stringify(res.errors).slice(0, 200));
+      if (res.data.shop) shopUrl = res.data.shop.primaryDomain.url;
       const pv = res.data.productVariants;
       for (const n of pv.nodes) {
         if (n.product.status !== 'ACTIVE') continue;
-        items.push({ product: n.product.title, size: n.title === 'Default Title' ? '' : n.title, qty: n.inventoryQuantity ?? 0 });
+        const img = n.product.featuredMedia?.preview?.image?.url || '';
+        items.push({ product: n.product.title, size: n.title === 'Default Title' ? '' : n.title, qty: n.inventoryQuantity ?? 0, image: img });
       }
       cursor = pv.pageInfo.hasNextPage ? pv.pageInfo.endCursor : null;
     } while (cursor);
 
     items.sort((a, b) => a.product.localeCompare(b.product));
     writeFileSync(new URL(`./data/${s.code}.json`, import.meta.url),
-      JSON.stringify({ ok: true, client: s.client, updated, items }, null, 1) + '\n');
+      JSON.stringify({ ok: true, client: s.client, updated, shopUrl, items }, null, 1) + '\n');
     console.log(`${s.client}: ${items.length} rows`);
   } catch (e) {
     failed++;
