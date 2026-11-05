@@ -1,0 +1,27 @@
+name: Update client inventory
+on:
+  schedule:
+    - cron: '17 10 * * *'   # every morning (~5-6 AM Detroit time)
+  workflow_dispatch:         # "Run workflow" button for an update on demand
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pull stock from Shopify (read-only)
+        env:
+          TOPREP_CLIENT_ID: ${{ secrets.TOPREP_CLIENT_ID }}
+          TOPREP_CLIENT_SECRET: ${{ secrets.TOPREP_CLIENT_SECRET }}
+        run: node inventory/update.mjs
+      - name: Save the new numbers
+        if: always()
+        run: |
+          git config user.name "inventory-bot"
+          git config user.email "inventory-bot@users.noreply.github.com"
+          git add inventory/data
+          git diff --cached --quiet || (git commit -m "Daily inventory update" && git push)

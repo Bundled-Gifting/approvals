@@ -70,7 +70,6 @@ footer{font-size:13px;color:var(--muted);text-align:center}
   <footer>Questions? Email Orders@BundledGifting.com or call 1 (313) 600-2765.</footer>
 </div>
 <script>
-const API = "https://script.google.com/macros/s/AKfycbzOIMhdCnb9sJ9uxrGPAAdTlPRSAqKQRKjs6v6lvZn1yB2l_OPmKCpGFC9wCm-AJuqAZA/exec";
 const LOW = 10;
 function esc(s){ const d=document.createElement("div"); d.textContent = s == null ? "" : String(s); return d.innerHTML; }
 const code = new URLSearchParams(location.search).get("c") || "";
@@ -83,7 +82,9 @@ async function load(){
   if(!code){ notFound("This link is incomplete. Please contact Bundled Gifting Solutions."); return; }
   let data;
   try{
-    const r = await fetch(API + "?c=" + encodeURIComponent(code), {cache:"no-store"});
+    if(!/^[a-z0-9]{8,40}$/i.test(code)) throw 0;
+    const r = await fetch("data/" + code + ".json?t=" + Date.now(), {cache:"no-store"});
+    if(r.status === 404){ notFound("Your inventory isn't available yet. Please check back tomorrow, or contact Bundled Gifting Solutions."); return; }
     data = await r.json();
   }catch(e){ notFound("We couldn't load your inventory right now. Please try again in a few minutes."); return; }
   if(!data || !data.ok){ notFound(data && data.message ? data.message : "This link is not valid. Please contact Bundled Gifting Solutions."); return; }
