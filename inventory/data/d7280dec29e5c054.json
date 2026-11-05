@@ -1,0 +1,80 @@
+{
+ "ok": true,
+ "client": "Heretto",
+ "updated": "Nov 5, 2026, 6:50 PM",
+ "shopUrl": "",
+ "items": [
+  {
+   "product": "Heretto New Hire Bundle",
+   "size": "S",
+   "qty": 2,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages.png?v=1791223957"
+  },
+  {
+   "product": "Heretto New Hire Bundle",
+   "size": "M",
+   "qty": 5,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages.png?v=1791223957"
+  },
+  {
+   "product": "Heretto New Hire Bundle",
+   "size": "L",
+   "qty": 6,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages.png?v=1791223957"
+  },
+  {
+   "product": "Heretto New Hire Bundle",
+   "size": "XL",
+   "qty": 4,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages.png?v=1791223957"
+  },
+  {
+   "product": "Heretto New Hire Bundle",
+   "size": "2XL",
+   "qty": 2,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages.png?v=1791223957"
+  },
+  {
+   "product": "Heretto New Hire Bundle",
+   "size": "3XL",
+   "qty": 1,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages.png?v=1791223957"
+  },
+  {
+   "product": "Heretto Sweatshirt",
+   "size": "S",
+   "qty": 7,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
+  },
+  {
+   "product": "Heretto Sweatshirt",
+   "size": "M",
+   "qty": 16,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
+  },
+  {
+   "product": "Heretto Sweatshirt",
+   "size": "L",
+   "qty": 19,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
+  },
+  {
+   "product": "Heretto Sweatshirt",
+   "size": "XL",
+   "qty": 16,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
+  },
+  {
+   "product": "Heretto Sweatshirt",
+   "size": "2XL",
+   "qty": 7,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
+  },
+  {
+   "product": "Heretto Sweatshirt",
+   "size": "3XL",
+   "qty": 3,
+   "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
+  }
+ ]
+}
