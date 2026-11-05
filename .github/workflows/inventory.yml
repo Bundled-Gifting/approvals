@@ -5,7 +5,6 @@ on:
   workflow_dispatch:         # "Run workflow" button for an update on demand
 permissions:
   contents: write
-  pages: write
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -28,8 +27,3 @@ jobs:
           git config user.email "inventory-bot@users.noreply.github.com"
           git add inventory/data
           git diff --cached --quiet || (git commit -m "Daily inventory update" && git push)
-      - name: Republish the site
-        if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh api -X POST repos/${{ github.repository }}/pages/builds || true

@@ -91,7 +91,7 @@ async function load(){
   let data;
   try{
     if(!/^[a-z0-9]{8,40}$/i.test(code)) throw 0;
-    const r = await fetch("data/" + code + ".json?t=" + Date.now(), {cache:"no-store"});
+    const r = await fetch("https://raw.githubusercontent.com/Bundled-Gifting/approvals/main/inventory/data/" + code + ".json?t=" + Date.now(), {cache:"no-store"});
     if(r.status === 404){ notFound("Your inventory isn't available yet. Please check back tomorrow, or contact Bundled Gifting Solutions."); return; }
     data = await r.json();
   }catch(e){ notFound("We couldn't load your inventory right now. Please try again in a few minutes."); return; }
