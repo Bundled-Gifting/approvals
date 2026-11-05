@@ -1,0 +1,112 @@
+{
+ "ok": true,
+ "client": "Top Rep",
+ "updated": "Nov 5, 2026, 3:16 PM",
+ "items": [
+  {
+   "product": "Closers Hoodie",
+   "size": "S",
+   "qty": 11
+  },
+  {
+   "product": "Closers Hoodie",
+   "size": "M",
+   "qty": 25
+  },
+  {
+   "product": "Closers Hoodie",
+   "size": "L",
+   "qty": 27
+  },
+  {
+   "product": "Closers Hoodie",
+   "size": "XL",
+   "qty": 28
+  },
+  {
+   "product": "Closers Hoodie",
+   "size": "2XL",
+   "qty": 26
+  },
+  {
+   "product": "Closers Hoodie",
+   "size": "3XL",
+   "qty": 25
+  },
+  {
+   "product": "Closers Hoodie",
+   "size": "4XL",
+   "qty": 5
+  },
+  {
+   "product": "Hat",
+   "size": "",
+   "qty": 90
+  },
+  {
+   "product": "I Went Pro Hoodie",
+   "size": "S",
+   "qty": 2
+  },
+  {
+   "product": "I Went Pro Hoodie",
+   "size": "M",
+   "qty": 12
+  },
+  {
+   "product": "I Went Pro Hoodie",
+   "size": "L",
+   "qty": 13
+  },
+  {
+   "product": "I Went Pro Hoodie",
+   "size": "XL",
+   "qty": 13
+  },
+  {
+   "product": "I Went Pro Hoodie",
+   "size": "2XL",
+   "qty": 5
+  },
+  {
+   "product": "I Went Pro Hoodie",
+   "size": "3XL",
+   "qty": 1
+  },
+  {
+   "product": "T-shirt",
+   "size": "S",
+   "qty": 7
+  },
+  {
+   "product": "T-shirt",
+   "size": "M",
+   "qty": 12
+  },
+  {
+   "product": "T-shirt",
+   "size": "L",
+   "qty": 24
+  },
+  {
+   "product": "T-shirt",
+   "size": "XL",
+   "qty": 25
+  },
+  {
+   "product": "T-shirt",
+   "size": "2XL",
+   "qty": 3
+  },
+  {
+   "product": "T-shirt",
+   "size": "3XL",
+   "qty": 1
+  },
+  {
+   "product": "Water Bottle",
+   "size": "",
+   "qty": 49
+  }
+ ]
+}
