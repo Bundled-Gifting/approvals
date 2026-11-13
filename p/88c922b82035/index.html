@@ -94,8 +94,8 @@ textarea{font:14px var(--body);color:var(--ink);background:var(--bg);border:1px 
 .who input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 footer{font-size:13px;color:var(--muted);text-align:center}
 @media (prefers-reduced-motion: reduce){.bar i{transition:none}}
-.gal .stage{width:100%;max-width:560px;aspect-ratio:580/400;display:grid;place-items:center;background:#fff;border-radius:8px;overflow:hidden}
-.gal .stage img,.gal .stage video{max-width:100%;max-height:100%;width:auto;height:auto;display:block;border-radius:8px}
+.gal .stage{width:100%;max-width:560px;background:#fff;border-radius:8px;padding:10px;box-sizing:border-box;display:flex;justify-content:center;align-items:center}
+.gal .stage img,.gal .stage video{max-width:100%;max-height:460px;width:auto;height:auto;display:block}
 .gal .thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;max-width:560px}
 .gal .thumbs button{all:unset;box-sizing:border-box;cursor:pointer;width:76px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted);text-align:center}
 .gal .thumbs img{width:76px;height:54px;object-fit:contain;background:#fff;border:2px solid var(--line);border-radius:6px;display:block}
@@ -172,7 +172,7 @@ const ITEMS = [
   {"id": "tote", "name": "Maine Zippered 8-oz Cotton Tote", "specs": [], "img": "img/tote.jpg"},
   {"id": "bookmark", "name": "Trio Magnifying Bookmark Ruler", "specs": [], "img": "img/bookmark.jpg"},
   {"id": "notebook", "name": "TaskRight Afton Notebook with Pen", "specs": [], "img": "img/notebook.jpg"},
-  {"id": "box", "name": "Custom Mailer Box", "specs": [], "img": "img/box-front.jpg", "attention": "Your box is printed on the outside and the inside. Please tap each view below to see every side before approving.", "gallery": [{"video": "img/box-spin.mp4", "poster": "img/box-poster.jpg", "cap": "360° view"}, {"img": "img/box-front.jpg", "cap": "Front"}, {"img": "img/box-side.jpg", "cap": "Side"}, {"img": "img/box-back.jpg", "cap": "Back"}, {"img": "img/box-open.jpg", "cap": "Opened"}, {"img": "img/box-lid.jpg", "cap": "Inside lid"}, {"img": "img/box-inside.jpg", "cap": "Inside of box"}]}
+  {"id": "box", "name": "Custom Mailer Box", "specs": [], "img": "img/box-front.jpg", "attention": "Your box is printed on the outside and the inside. Please tap each view below to see every side before approving.", "gallery": [{"video": "img/box-360.mp4", "poster": "img/box-360-poster.jpg", "cap": "360° view"}, {"img": "img/box-front.jpg", "cap": "Front"}, {"img": "img/box-side.jpg", "cap": "Side"}, {"img": "img/box-back.jpg", "cap": "Back"}, {"img": "img/box-side2.jpg", "cap": "Other side"}, {"img": "img/box-open.jpg", "cap": "Opened"}, {"img": "img/box-lookin.jpg", "cap": "Looking inside"}]}
 ];
 
 const state = {};      // id -> saved record from the store
