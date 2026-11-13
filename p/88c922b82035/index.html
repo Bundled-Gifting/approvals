@@ -103,6 +103,19 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 .gal .thumbs button[aria-pressed="true"]{color:var(--ink);font-weight:600}
 .gal .thumbs button:focus-visible img{outline:3px solid var(--accent);outline-offset:2px}
 .gal .viewcap{font-size:13px;color:var(--muted);margin-top:6px}
+.b3{width:100%;max-width:600px}
+.b3 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.b3 .tabs button,.b3 .ctl button{font:600 13px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer}
+.b3 .tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.b3 .stage3{width:100%;aspect-ratio:4/3;background:linear-gradient(#f7f8fa,#e6e8ec);border-radius:10px;overflow:hidden;position:relative}
+.b3 .ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.b3 .ctl .lbl{font-size:12px;color:var(--muted);font-weight:600;margin-right:2px}
+.b3 .ctl button.main{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.b3 .tip{font-size:12px;color:var(--muted);margin-top:8px}
+.b3 .flat{background:#fff;border-radius:10px;padding:10px;border:1px solid var(--line)}
+.b3 .flat img{width:100%;height:auto;display:block}
+.b3 .flat a{display:inline-block;margin-top:8px;font-size:13px;color:var(--accent);font-weight:600}
+.b3 .loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:14px}
 .wipwrap{position:relative}
 .wip{position:absolute;inset:0;background:rgba(200,30,30,.22);border:3px solid #c81e1e;border-radius:8px;display:grid;place-items:center;pointer-events:none}
 .wip span{background:#c81e1e;color:#fff;font:700 18px var(--body);text-align:center;padding:12px 18px;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:80%}
@@ -163,6 +176,10 @@ footer{font-size:13px;color:var(--muted);text-align:center}
   <footer>Questions? Email Orders@BundledGifting.com or call 1 (313) 600-2765.</footer>
 </div>
 
+<script type="module">
+import { createBox } from "../../assets/box3d.js";
+window.__createBox = createBox; window.dispatchEvent(new Event("box3d-ready"));
+</script>
 <script>
 /* ===== ORDER SETUP: change these for each new order ===== */
 const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPzfjtOiH0F7s0GzUrSK05MuNX7hos9-oTDu4gYlClJCg/exec";
@@ -172,7 +189,7 @@ const ITEMS = [
   {"id": "tote", "name": "Maine Zippered 8-oz Cotton Tote", "specs": [], "img": "img/tote.jpg"},
   {"id": "bookmark", "name": "Trio Magnifying Bookmark Ruler", "specs": [], "img": "img/bookmark.jpg"},
   {"id": "notebook", "name": "TaskRight Afton Notebook with Pen", "specs": [], "img": "img/notebook.jpg"},
-  {"id": "box", "name": "Custom Mailer Box", "specs": [], "img": "img/box-front.jpg", "attention": "Your box is printed on the outside and the inside. Please tap each view below to see every side before approving.", "gallery": [{"video": "img/box-360.mp4", "poster": "img/box-360-poster.jpg", "cap": "360° view"}, {"img": "img/box-front.jpg", "cap": "Front"}, {"img": "img/box-side.jpg", "cap": "Side"}, {"img": "img/box-back.jpg", "cap": "Back"}, {"img": "img/box-side2.jpg", "cap": "Other side"}, {"img": "img/box-open.jpg", "cap": "Opened"}, {"img": "img/box-lookin.jpg", "cap": "Looking inside"}]}
+  {"id": "box", "name": "Custom Mailer Box", "specs": [], "img": "img/box-flat-outside.jpg", "attention": "Your box is printed on the outside and the inside. Turn the 3D box to check every side, tap Open lid to see the inside, and use the flat artwork tabs to read each panel up close.", "box3d": {"flatOut": "img/box-flat-outside.jpg", "flatIn": "img/box-flat-inside.jpg", "model": {"outside": "img/box-tex-outside.webp", "inside": "img/box-tex-inside.webp", "imgW": 2786, "imgH": 2495, "spinSpeed": 2.2, "folds": {"flapEnd": 12, "lidFront": 270, "lidBack": 1210, "bottomL": 1521, "bottomR": 2461, "frontEnd": 2773, "bottomT": 636, "bottomB": 1858, "endT": 325, "endB": 2169, "innerT": 12, "innerB": 2483, "earSplit": 300, "earT": 340, "earB": 2154}}, "views": [{"label": "Lid (top)", "az": 1.5708, "el": 1.35, "dist": 1.0}, {"label": "Front", "az": 1.5708, "el": 0.3, "dist": 0.95}, {"label": "STARTS HERE side", "az": 0, "el": 0.3, "dist": 0.95}, {"label": "BE A TEACHER side", "az": 3.1416, "el": 0.3, "dist": 0.95}, {"label": "Back (AUSLCHICAGO.ORG)", "az": -1.5708, "el": 0.3, "dist": 0.95}, {"label": "Inside of lid", "az": 1.5708, "el": 0.35, "dist": 1.5, "open": true}, {"label": "Inside of box", "az": 1.5708, "el": 1.15, "dist": 1.5, "open": true}, {"label": "Bottom", "az": 1.5708, "el": -1.35, "dist": 1.0}]}}
 ];
 
 const state = {};      // id -> saved record from the store
@@ -180,6 +197,41 @@ const history = {};    // id -> every answer for the item, oldest first
 const local = {};      // id -> {pick, editing, noteOpen, note}
 let canWrite = false;
 let loaded = false;   // true once saved answers have come back from Google
+
+
+/* 3D box viewer: built once and re-attached on every render so the spin and lid state are kept */
+const B3 = {};
+function box3dView(it){
+  if (B3[it.id]) { syncB3(it); return B3[it.id].root; }
+  const c = it.box3d, root = document.createElement("div"); root.className = "b3";
+  root.innerHTML = `<div class="tabs" role="group" aria-label="Choose a view">
+      <button type="button" data-t="3d" aria-pressed="true">3D box</button>
+      <button type="button" data-t="out" aria-pressed="false">Outside artwork (flat)</button>
+      <button type="button" data-t="in" aria-pressed="false">Inside artwork (flat)</button></div>
+    <div class="p3d"><div class="stage3"><div class="loading">Loading 3D box&hellip;</div></div>
+      <div class="ctl"><button type="button" class="main" data-a="lid">Open lid</button><button type="button" data-a="spin">Pause spin</button></div>
+      <div class="ctl"><span class="lbl">Show me:</span>${c.views.map((v,i)=>`<button type="button" data-v="${i}">${esc(v.label)}</button>`).join("")}</div>
+      <div class="tip">Drag the box to turn it any way you like. Scroll or pinch to zoom.</div></div>
+    <div class="flat" data-p="out" hidden><img src="${c.flatOut}" alt="Outside artwork laid flat"><a href="${c.flatOut}" target="_blank" rel="noopener">Open full size to zoom in</a></div>
+    <div class="flat" data-p="in" hidden><img src="${c.flatIn}" alt="Inside artwork laid flat"><a href="${c.flatIn}" target="_blank" rel="noopener">Open full size to zoom in</a></div>`;
+  const st = B3[it.id] = { root, box: null };
+  const stage = root.querySelector(".stage3");
+  const lidBtn = root.querySelector('[data-a="lid"]'), spinBtn = root.querySelector('[data-a="spin"]');
+  const sync = () => { if (!st.box) return; lidBtn.textContent = st.box.isOpen() ? "Close lid" : "Open lid"; spinBtn.textContent = st.box.isSpinning() ? "Pause spin" : "Spin"; };
+  st.sync = sync;
+  const start = () => { if (st.box || !window.__createBox) return; stage.innerHTML = ""; st.box = window.__createBox(stage, c.model); st.box.el.addEventListener("pointerdown", () => setTimeout(sync, 0)); sync(); };
+  if (window.__createBox) requestAnimationFrame(start); else window.addEventListener("box3d-ready", start, { once: true });
+  lidBtn.onclick = () => { if (!st.box) return; st.box.setLid(!st.box.isOpen()); sync(); };
+  spinBtn.onclick = () => { if (!st.box) return; st.box.setSpin(!st.box.isSpinning()); sync(); };
+  root.querySelectorAll("[data-v]").forEach(b => b.onclick = () => { if (!st.box) return; const v = c.views[+b.dataset.v]; st.box.setSpin(false); st.box.setLid(!!v.open); st.box.view(v.az, v.el, v.dist); sync(); });
+  root.querySelectorAll("[data-t]").forEach(b => b.onclick = () => {
+    root.querySelectorAll("[data-t]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    root.querySelector(".p3d").hidden = b.dataset.t !== "3d";
+    root.querySelectorAll("[data-p]").forEach(p => p.hidden = p.dataset.p !== b.dataset.t);
+  });
+  return root;
+}
+function syncB3(it){ const st = B3[it.id]; if (st && st.sync) st.sync(); }
 
 function esc(s){ const d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
 function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}); }catch(e){ return ""; } }
@@ -255,6 +307,9 @@ function render(){
     } else {
       const s = document.createElement("div");
       s.className = "single";
+      if (it.box3d) {
+        s.appendChild(box3dView(it));
+      } else
       if (it.gallery) {
         s.classList.add("gal");
         const cur = local[it.id].view || 0, g = it.gallery[cur];
