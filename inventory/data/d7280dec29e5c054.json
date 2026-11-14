@@ -1,7 +1,7 @@
 {
  "ok": true,
  "client": "Heretto",
- "updated": "Nov 13, 2026, 6:15 AM",
+ "updated": "Nov 14, 2026, 5:58 AM",
  "shopUrl": "",
  "items": [
   {
@@ -49,25 +49,25 @@
   {
    "product": "Heretto Sweatshirt",
    "size": "M",
-   "qty": 7,
+   "qty": 0,
    "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
   },
   {
    "product": "Heretto Sweatshirt",
    "size": "L",
-   "qty": 11,
+   "qty": 5,
    "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
   },
   {
    "product": "Heretto Sweatshirt",
    "size": "XL",
-   "qty": 13,
+   "qty": 6,
    "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
   },
   {
    "product": "Heretto Sweatshirt",
    "size": "2XL",
-   "qty": 7,
+   "qty": 6,
    "image": "https://cdn.shopify.com/s/files/1/0603/0114/8322/files/HerettoSiteImages_1.png?v=1791224447"
   },
   {
