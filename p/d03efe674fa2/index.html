@@ -96,6 +96,7 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 @media (prefers-reduced-motion: reduce){.bar i{transition:none}}
 .wipwrap{position:relative}
 .wip{position:absolute;inset:0;background:rgba(200,30,30,.22);border:3px solid #c81e1e;border-radius:8px;display:grid;place-items:center;pointer-events:none}
+.opt .wip span{font-size:14px;padding:8px 12px;display:block}
 .wip span{background:#c81e1e;color:#fff;font:700 18px var(--body);text-align:center;padding:12px 18px;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:80%}
 .wip small{display:block;font-weight:500;font-size:14px;margin-top:2px}
 .opt .optname{font-weight:600;font-size:14px;align-items:flex-start}
@@ -178,7 +179,7 @@ const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPz
 const ORDER = { id: "mr-valuation-holiday-gifts-3544-d03efe674fa2", name: "MR Valuation Holiday Gifts #3544" };
 const ITEMS = [
   {"id": "box", "name": "Custom Shipping Box", "specs": [], "img": "img/box-flat-outside.jpg", "attention": "Your box is printed on the outside. Turn the 3D box to check every side, tap Open flaps to see it open, and use the flat artwork tab to read each panel up close.", "box3d": {"flatOut": "img/box-flat-outside.jpg", "lidOpen": "Open flaps", "lidClose": "Close flaps", "model": {"outside": "img/box-tex-outside.jpg", "flatW": 1042.11, "flatH": 375.36, "walls": [42.06, 320.95, 540.07, 822.62, 1042.07], "topFold": 111, "bottomFold": 264, "topEnd": [0, 0, 0, 0], "bottomEnd": [375.34, 274.24, 375.36, 274.24], "spinSpeed": 2.2}, "views": [{"label": "Front", "az": 0, "el": 0.25, "dist": 0.95}, {"label": "Side", "az": 1.5708, "el": 0.25, "dist": 0.95}, {"label": "Back", "az": 3.1416, "el": 0.25, "dist": 0.95}, {"label": "Other side", "az": -1.5708, "el": 0.25, "dist": 0.95}, {"label": "Top", "az": 0, "el": 1.35, "dist": 1.0}, {"label": "Inside", "az": 0, "el": 1.0, "dist": 1.3, "open": true}, {"label": "Bottom", "az": 0, "el": -1.35, "dist": 1.0}]}},
-  {"id": "card", "name": "Holiday Card", "specs": [], "maxW": 560, "img": "img/holiday-card.jpg"},
+  {"id": "card2", "name": "Holiday Card", "specs": [], "optFit": true, "optMin": 340, "note": "We've made new designs for your holiday card. Please choose one.", "options": [{"key": "0", "label": "Original design", "img": "img/holiday-card.jpg", "unavailable": true, "wip": true}, {"key": "A", "label": "Navy to match your box", "img": "img/card-option-boxmatch.jpg"}, {"key": "B", "label": "Light blue with navy border", "img": "img/card-option-a.jpg"}, {"key": "C", "label": "Navy with light blue edge", "img": "img/card-option-b.jpg"}, {"key": "D", "label": "Navy with gold lettering", "img": "img/card-option-c.jpg"}]},
   {"id": "blanket", "name": "Alpine Ultra Plush Blanket", "specs": [], "img": "img/blanket.jpg"}
 ];
 
@@ -288,6 +289,7 @@ function render(){
         b.disabled = !showForm || !canWrite || !!o.unavailable;
         if (o.unavailable) { b.style.opacity = ".6"; b.style.cursor = "default"; b.setAttribute("aria-disabled","true"); }
         b.innerHTML = `<img src="${o.img}" alt="${o.unavailable ? "Original choice" : "Option " + o.key}: ${esc(o.label)}"${it.optFit ? ` style="aspect-ratio:auto;object-fit:contain;background:#fff${it.optH ? `;height:${it.optH}px;width:100%` : ""}"` : ""}>${o.img2 ? `<img src="${o.img2}" alt="${esc(o.cap2 || "Actual hat color")}" style="aspect-ratio:auto;object-fit:contain;background:#fff"><small class="cap2">${esc(o.cap2 || "Actual hat color")}</small>` : ""}<span class="optname">${o.unavailable ? "" : `<i class="letter">${o.key}</i>`}${esc(o.label)}</span>${o.orig ? `<span class="orig">&#9733; ${esc(o.orig)}</span>` : ""}${o.tag ? `<span class="otag">${esc(o.tag)}</span>` : ""}${o.colors ? `<span class="fl" role="radiogroup" aria-label="Choose a foil color">${o.colors.map(c => `<span role="radio" tabindex="0" data-c="${esc(c)}" aria-checked="${l.pick === o.key && l.color === c}">${esc(c)}</span>`).join("")}</span>` : ""}${o.feats ? `<ul class="feats">${o.feats.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}${o.sample ? `<small class="samp">${esc(o.sample)}</small>` : ""}`;
+        if (o.wip) { b.classList.add("wipwrap"); const ov=document.createElement("div"); ov.className="wip"; ov.innerHTML=`<span>Change in progress<small>Please choose a new design</small></span>`; b.appendChild(ov); }
         if (o.colors) b.querySelectorAll("[data-c]").forEach(cc => { const go = e => { e.stopPropagation(); e.preventDefault(); if (b.disabled) return; l.pick = o.key; l.color = cc.dataset.c; render(); }; cc.onclick = go; cc.onkeydown = e => { if (e.key === "Enter" || e.key === " ") go(e); }; });
         b.onclick = () => { if (l.pick !== o.key) l.color = null; l.pick = o.key; render(); };
         grid.appendChild(b);
