@@ -67,7 +67,7 @@ h2{font-family:var(--display);font-weight:500;font-size:21px;margin:2px 0 0;line
 .single img{width:auto;max-width:min(100%,340px);max-height:440px;border-radius:8px;display:block}
 .single img.tall{max-height:680px}
 .cap2{font-size:12px;color:var(--muted);text-align:center;margin-top:-4px}
-.refblock{margin:0 0 16px}.refblock img{width:auto;max-width:min(100%,340px);max-height:440px;border-radius:8px;display:block}
+.refblock{margin:0 0 16px}.refblock img{width:auto;max-width:min(100%,560px);max-height:440px;border-radius:8px;display:block}
 .pair{display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap}.pair figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}.pair figcaption{font-size:13px;color:var(--muted)}
 .opt img{max-height:340px}
 .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -160,7 +160,7 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPzfjtOiH0F7s0GzUrSK05MuNX7hos9-oTDu4gYlClJCg/exec";
 const ORDER = { id: "jingoli-power-holiday-gift-504526e2a8d2", name: "Jingoli Power Holiday Gift" };
 const ITEMS = [
-  {"id": "camino-12l", "name": "Yeti Camino Zip 12L Carryall Tote Bag", "specs": [], "optFit": true, "optMin": 240, "attention": "We have two logo placements for you to choose from, both within the imprint area Yeti allows on this tote. Please choose one logo placement.", "options": [{"key": "A", "label": "Logo right below the YETI badge", "img": "img/camino-12l-navy-a.jpg", "img2": "img/camino-12l-navy-a-close.jpg", "cap2": "Close-up of logo"}, {"key": "B", "label": "Logo lower on the front panel", "img": "img/camino-12l-navy-b.jpg", "img2": "img/camino-12l-navy-b-close.jpg", "cap2": "Close-up of logo"}]}
+  {"id": "camino-12l", "name": "Yeti Camino Zip 12L Carryall Tote Bag", "specs": [], "optFit": true, "optMin": 240, "note": "Below is the logo artwork Yeti will print. The logo shows a bit small in the mock-ups due to the imaging.", "refs": [{"img": "img/jingoli-logo-print.png", "cap": "Logo artwork Yeti will print"}], "attention": "We have two logo placements for you to choose from, both within the imprint area Yeti allows on this tote. Please choose one logo placement.", "options": [{"key": "A", "label": "Logo right below the YETI badge", "img": "img/camino-12l-navy-a.jpg", "img2": "img/camino-12l-navy-a-close.jpg", "cap2": "Close-up of logo"}, {"key": "B", "label": "Logo lower on the front panel", "img": "img/camino-12l-navy-b.jpg", "img2": "img/camino-12l-navy-b-close.jpg", "cap2": "Close-up of logo"}]}
 ];
 
 const state = {};      // id -> saved record from the store
