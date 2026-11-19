@@ -160,7 +160,10 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPzfjtOiH0F7s0GzUrSK05MuNX7hos9-oTDu4gYlClJCg/exec";
 const ORDER = { id: "kepler-holiday-gifts-3543-922bbeff98c0", name: "Kepler Holiday Gifts #3543" };
 const ITEMS = [
-  {"id": "slate-cheese-board", "name": "Slate Cheese Board", "specs": [], "img": "img/slate-cheese-board.jpg"}
+  {"id": "slate-cheese-board", "name": "Slate Cheese Board", "specs": [], "note": "We've added a second mock-up with the logo a bit smaller. Please choose the one you like best.", "optFit": true, "optMin": 240, "options": [
+    {"key": "A", "label": "Original logo size", "img": "img/slate-cheese-board.jpg"},
+    {"key": "B", "label": "Logo a bit smaller", "img": "img/slate-cheese-board-smaller-logo.jpg"}
+  ]}
 ];
 
 const state = {};      // id -> saved record from the store
