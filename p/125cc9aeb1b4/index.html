@@ -160,7 +160,7 @@ const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPz
 const ORDER = { id: "cmda-law-bundles-3554-125cc9aeb1b4", name: "CMDA Law Bundles #3554" };
 const ITEMS = [
   {"id": "hot-cocoa", "name": "Hot Cocoa", "specs": [], "optFit": true, "optMin": 220, "attention": "With the holidays and so many orders, vendors are running out of fresh stock quickly. Your original choice, Dreamy: Dark Chocolate Hot Cocoa, is no longer in stock, but we have a really great replacement for you. Please choose Option A.", "options": [{"key": "X", "label": "Dreamy: Dark Chocolate Hot Cocoa Single Serving Pouch", "orig": "Your original choice", "tag": "Out of stock", "unavailable": true, "feats": ["Dark chocolate hot cocoa mix", "Single serving pouch, 1.15 oz"], "img": "https://cdn.faire.com/fastly/2bb07beaeae84343577e0bdbc98e4b81f1edd70923622563fded8357afbadf0d.jpeg?bg-color=FFFFFF&format=jpg&precrop=55.05p%2C82.55p%2Cx20.62p%2Cy13.07p&width=720"}, {"key": "A", "label": "Nutty: Cinnamon Milk Chocolate Hot Cocoa Single Serving Pouch", "feats": ["Milk chocolate hot cocoa spiced with cinnamon and a dash of almond", "Single serving pouch, 33 g"], "img": "https://cdn.faire.com/fastly/f085393062e58a75e65153ad1449fe9eb64bef8a0a217fae6c49dcca53780a6b.jpeg?bg-color=FFFFFF&format=jpg&width=720"}]},
-  {"id": "holiday-gummies", "name": "Holiday Gummies", "specs": [], "optFit": true, "optMin": 220, "attention": "Our vendor does not have enough stock of the Gummy Snowflakes. Would it be okay to send your team a mix of Gummy Snowflakes and Gummy Snowmen? If that works for you, please choose Option A.", "options": [{"key": "A", "label": "Mix of Gummy Snowflakes and Gummy Snowmen", "feats": ["Sugar sanded gummy snowflakes", "Gummy snowmen in red and white or green and white", "6 oz"], "img": "https://cdn.faire.com/fastly/85a06c7c5747b23919f0d92654cc155a567e3abbadbf87ec81803790d7e3001e.jpeg?bg-color=FFFFFF&format=jpg&width=720", "img2": "https://cdn.faire.com/fastly/f7bdb0649818e93da7f86038073a1869ccfe5bfdc28981e3b4060c124fca70ab.jpeg?bg-color=FFFFFF&format=jpg&width=720", "cap2": "Gummy Snowmen"}]}
+  {"id": "holiday-gummies", "name": "Holiday Gummies", "specs": [], "optMin": 220, "attention": "Our vendor does not have enough stock of the Gummy Snowflakes. Would it be okay to send your team a mix of Gummy Snowflakes and Gummy Snowmen? If that works for you, please click Approve.", "showcase": [{"label": "Gummy Snowflakes", "feats": ["Sugar sanded gummy snowflakes", "6 oz"], "img": "https://cdn.faire.com/fastly/85a06c7c5747b23919f0d92654cc155a567e3abbadbf87ec81803790d7e3001e.jpeg?bg-color=FFFFFF&format=jpg&width=720"}, {"label": "Gummy Snowmen", "feats": ["Gummy snowmen in red and white or green and white", "6 oz"], "img": "https://cdn.faire.com/fastly/f7bdb0649818e93da7f86038073a1869ccfe5bfdc28981e3b4060c124fca70ab.jpeg?bg-color=FFFFFF&format=jpg&width=720"}]}
 ];
 
 const state = {};      // id -> saved record from the store
@@ -185,7 +185,7 @@ function render(){
     const showForm = !rec || l.editing;
     const firstLine = it.name.split("\n")[0];
     const chosen = rec && rec.option && it.options ? it.options.find(o => o.key === rec.option) : null;
-    const thumb = (chosen && chosen.img) || it.img || (it.options && it.options[0].img);
+    const thumb = (chosen && chosen.img) || it.img || (it.options && it.options[0].img) || (it.showcase && it.showcase[0].img);
     checks.push({id: it.id, n: i+1, name: firstLine, status});
     if (loaded && status === "approved" && !l.editing && !l.open){
       const mini = document.createElement("section");
@@ -238,6 +238,17 @@ function render(){
         if (o.colors) b.querySelectorAll("[data-c]").forEach(cc => { const go = e => { e.stopPropagation(); e.preventDefault(); if (b.disabled) return; l.pick = o.key; l.color = cc.dataset.c; render(); }; cc.onclick = go; cc.onkeydown = e => { if (e.key === "Enter" || e.key === " ") go(e); }; });
         b.onclick = () => { if (l.pick !== o.key) l.color = null; l.pick = o.key; render(); };
         grid.appendChild(b);
+      });
+      card.appendChild(grid);
+    } else if (it.showcase) {
+      const grid = document.createElement("div");
+      grid.className = "options";
+      if (it.optMin) grid.style.gridTemplateColumns = `repeat(auto-fit,minmax(${it.optMin}px,1fr))`;
+      it.showcase.forEach(o => {
+        const d = document.createElement("div");
+        d.className = "opt"; d.style.cursor = "default";
+        d.innerHTML = `<img src="${o.img}" alt="${esc(o.label)}" style="aspect-ratio:auto;object-fit:contain;background:#fff"><span class="optname">${esc(o.label)}</span>${o.feats ? `<ul class="feats">${o.feats.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}`;
+        grid.appendChild(d);
       });
       card.appendChild(grid);
     } else {
