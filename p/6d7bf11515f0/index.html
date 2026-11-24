@@ -49,6 +49,9 @@ h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,5vw,36px);lin
 h2{font-family:var(--display);font-weight:500;font-size:21px;margin:2px 0 0;line-height:1.2}
 .specs{display:flex;flex-wrap:wrap;gap:6px 16px;margin:6px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted)}
 .specs b{color:var(--ink);font-weight:500}
+.urgent{margin:10px 0 0;font-size:15px;line-height:1.45;color:#b3261e;background:#fdecea;border-left:4px solid #b3261e;border-radius:6px;padding:8px 12px;font-weight:600}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .urgent{color:#ffb4ab;background:#3b1714;border-color:#ffb4ab}}
+:root[data-theme="dark"] .urgent{color:#ffb4ab;background:#3b1714;border-color:#ffb4ab}
 .attn{white-space:pre-line;margin:10px 0 0;font-size:14px;line-height:1.45;color:#1d4fb8;background:#e8f0fe;border-left:4px solid #1d4fb8;border-radius:6px;padding:8px 12px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .attn{color:#9cc0ff;background:#17243d;border-color:#9cc0ff}}
 :root[data-theme="dark"] .attn{color:#9cc0ff;background:#17243d;border-color:#9cc0ff}
@@ -159,6 +162,7 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPzfjtOiH0F7s0GzUrSK05MuNX7hos9-oTDu4gYlClJCg/exec";
 const ORDER = {"id": "censys-reorder-3109-6d7bf11515f0", "name": "Censys Reorder #3109"};
 const ITEMS = [
+  {"id": "tricharge", "name": "TriCharge 3-in-1 Wireless Charging Stand", "specs": [], "urgent": "Please approve today so this arrives in time for your 12/2 event.", "img": "img/charger.jpg"},
   {"id": "sticker-sheet", "name": "Sticker Sheet 6x4", "specs": [], "img": "img/sticker-sheet.jpg"},
   {"id": "pen-white", "name": "Sharpie S-Gel Pen", "specs": [["Color", "White"]], "img": "img/pen-white.jpg"},
   {"id": "pen-black", "name": "Sharpie S-Gel Pen", "specs": [["Color", "Black"]], "img": "img/pen-black.jpg"},
@@ -208,7 +212,7 @@ function render(){
     card.innerHTML = `
       <div class="card-head">
         <div><div class="itemno">Item ${i+1} of ${ITEMS.length}</div>
-        <h2 id="h-${it.id}" style="white-space:pre-line">${esc(it.name)}</h2><ul class="specs">${specs}</ul>${it.attention ? `<p class="attn"><b>Attention:</b> ${esc(it.attention)}</p>` : ""}</div>
+        <h2 id="h-${it.id}" style="white-space:pre-line">${esc(it.name)}</h2><ul class="specs">${specs}</ul>${it.urgent ? `<p class="urgent">&#9888; URGENT: ${esc(it.urgent)}</p>` : ""}${it.attention ? `<p class="attn"><b>Attention:</b> ${esc(it.attention)}</p>` : ""}</div>
         <span class="chip ${status}"${loaded ? "" : ' style="visibility:hidden"'}>${chipText}</span>
       </div>`;
 
