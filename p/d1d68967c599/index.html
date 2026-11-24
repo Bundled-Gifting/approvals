@@ -66,6 +66,9 @@ h2{font-family:var(--display);font-weight:500;font-size:21px;margin:2px 0 0;line
 .opt[aria-pressed="true"] .letter{background:var(--accent);color:var(--accent-ink)}
 .single img{width:auto;max-width:min(100%,340px);max-height:440px;border-radius:8px;display:block}
 .single img.tall{max-height:680px}
+.kitlists{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:14px}
+.kitlist h3{font-size:15px;margin:0 0 6px}
+.kitlist ul{margin:0;padding-left:20px;font-size:14px;line-height:1.55}
 .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .btn{font:600 14px var(--body);border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid transparent}
 .btn.approve{background:var(--ok);color:var(--surface)}
@@ -155,6 +158,7 @@ footer{font-size:13px;color:var(--muted);text-align:center}
 const API = "https://script.google.com/macros/s/AKfycbxVLQipOIyMsk7jnbk66CC6cBPzfjtOiH0F7s0GzUrSK05MuNX7hos9-oTDu4gYlClJCg/exec";
 const ORDER = { id: "rockefeller-3550-d1d68967c599", name: "Rockefeller #3550" };
 const ITEMS = [
+  {"id": "wrap-kit", "name": "2026 Deluxe Christmas Gift Wrapping Kit - Black & White", "specs": [], "attention": "A quick update on your gift wrapping kits: the maker was not able to fill all 119 kits with the exact items shown in your proposal, so a few pieces have been swapped. To make up for it, they have added several bonus items, so every kit now includes more than what was originally offered and comes with a greater overall value. The photos below show the updated kit, and the changes are listed underneath.", "imgs": ["img/wrap-kit-bag.jpg", "img/wrap-kit-items.jpg"], "img": "img/wrap-kit-bag.jpg", "lists": [{"title": "Bonus items added to every kit", "items": ["Gold Metallic Star Paper", "A second Black & White sticker sheet (2 total)", "Gold Grosgrain Ribbon", "2\" Black Raw Edge Velvet Ribbon (a bestseller)", "A second Mini White Poinsettia Clip On Flower (2 total)"]}, {"title": "Items no longer included", "items": ["Fa la la bags (2)", "Large pinecones (3)", "Bells (3)", "Gold metallic twine (1)"]}]},
   {"id": "speaker", "name": "Stark 2.0 Outdoor Bluetooth Speaker", "specs": [["Color", "Black"]], "img": "img/speaker.jpg"}
 ];
 
@@ -231,8 +235,14 @@ function render(){
     } else {
       const s = document.createElement("div");
       s.className = "single";
-      s.innerHTML = `<img src="${it.img}" alt="${esc(it.name)} proof photo"${it.tall ? ' class="tall"' : ""}${it.wide ? ' style="max-width:100%"' : ""}>`;
+      s.innerHTML = (it.imgs || [it.img]).map((src, k) => `<img src="${src}" alt="${esc(it.name)} photo ${k+1}"${it.tall ? ' class="tall"' : ""}${it.wide ? ' style="max-width:100%"' : ""}>`).join("");
+      if (it.imgs) s.style.cssText = "display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start";
       card.appendChild(s);
+      if (it.lists){
+        const ls = document.createElement("div"); ls.className = "kitlists";
+        ls.innerHTML = it.lists.map(g => `<div class="kitlist"><h3>${esc(g.title)}</h3><ul>${g.items.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("");
+        card.appendChild(ls);
+      }
     }
 
     if (rec && !l.editing){
