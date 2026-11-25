@@ -62,7 +62,7 @@ export function createBox(container, cfg) {
   back.obj.add(panel(f.lidBack, f.bottomL, f.bottomT, f.bottomB, back.hinge));
   const lid = pivot(back.obj, back.hinge, f.lidBack, cy); lid.obj.rotation.z = -HALF;
   lid.obj.add(panel(f.lidFront, f.lidBack, f.bottomT, f.bottomB, lid.hinge));
-  const flap = pivot(lid.obj, lid.hinge, f.lidFront, cy); flap.obj.rotation.z = cfg.flapIn ? -HALF + 0.06 : -HALF - 0.03; // flapIn: tuck flap goes inside the front wall so front-wall artwork shows
+  const flap = pivot(lid.obj, lid.hinge, f.lidFront, cy); flap.obj.rotation.z = cfg.flapIn ? -HALF - 0.12 : -HALF - 0.03; // flapIn: tuck flap goes inside the front wall so front-wall artwork shows
   flap.obj.add(panel(f.flapEnd, f.lidFront, f.bottomT, f.bottomB, flap.hinge));
   for (const [y, top] of [[f.bottomT, true], [f.bottomB, false]]) {
     const e = pivot(lid.obj, lid.hinge, cx, y); e.obj.rotation.x = top ? -HALF - 0.04 : HALF + 0.04;
